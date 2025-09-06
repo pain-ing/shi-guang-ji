@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -22,7 +22,7 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>
 
-export default function LoginPage() {
+function LoginInner() {
   const [showPassword, setShowPassword] = useState(false)
   const { signIn, loading } = useAuthStore()
   const { toast } = useToast()
@@ -40,7 +40,7 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginForm) => {
     const { error } = await signIn(data.email, data.password)
-    
+
     if (error) {
       toast({
         title: '登录失败',
@@ -157,3 +157,12 @@ export default function LoginPage() {
     </AuthGuard>
   )
 }
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">加载中...</div>}>
+      <LoginInner />
+    </Suspense>
+  )
+}
+
