@@ -42,6 +42,7 @@ function LoginInner() {
     const { error } = await signIn(data.email, data.password)
 
     if (error) {
+      console.error('登录错误详情:', error)
       toast({
         title: '登录失败',
         description: error.message || '请检查您的邮箱和密码',

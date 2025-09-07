@@ -146,6 +146,23 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       // 2) 真正登录（由客户端建立会话）
       const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
+      // 调试日志
+      if (error) {
+        console.error('Supabase 登录错误:', {
+          message: error.message,
+          status: error.status,
+          code: (error as any).code,
+          details: error
+        })
+      } else {
+        console.log('登录成功:', {
+          userId: data?.user?.id,
+          email: data?.user?.email,
+          emailConfirmed: data?.user?.email_confirmed_at,
+          userConfirmed: data?.user?.confirmed_at
+        })
+      }
+
       // 3) 审计上报（不影响主流程返回）
       try {
         await fetch('/api/security/audit', {

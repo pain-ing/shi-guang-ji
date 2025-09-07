@@ -28,9 +28,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `密码不符合要求：${issue}` }, { status: 400 })
     }
 
-    const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || ''
-    const emailRedirectTo = origin ? `${origin}/login` : undefined
-
     const client = createClient(supabaseUrl, anonKey, { auth: { autoRefreshToken: false, persistSession: false } })
 
     const { data, error } = await client.auth.signUp({
@@ -38,7 +35,6 @@ export async function POST(req: Request) {
       password,
       options: {
         data: { username: username || (email as string).split('@')[0] },
-        emailRedirectTo,
       },
     })
 

@@ -59,7 +59,7 @@ export default function RegisterPage() {
     } else {
       toast({
         title: '注册成功',
-        description: '请检查您的邮箱并点击确认链接来激活账户',
+        description: '账户创建成功，现在可以直接登录了！',
       })
       router.push('/login')
     }
