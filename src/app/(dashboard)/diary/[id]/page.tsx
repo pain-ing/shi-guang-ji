@@ -90,8 +90,7 @@ export default function DiaryDetailPage() {
 
   if (loading) {
     return (
-      <AuthGuard requireAuth={true}>
-        <DashboardLayout>
+      <DashboardLayout>
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <Button variant="outline" asChild>
@@ -117,15 +116,13 @@ export default function DiaryDetailPage() {
               </CardContent>
             </Card>
           </div>
-        </DashboardLayout>
-      </AuthGuard>
+      </DashboardLayout>
     )
   }
 
   if (!currentDiary) {
     return (
-      <AuthGuard requireAuth={true}>
-        <DashboardLayout>
+      <DashboardLayout>
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <Button variant="outline" asChild>
@@ -148,8 +145,7 @@ export default function DiaryDetailPage() {
               </CardContent>
             </Card>
           </div>
-        </DashboardLayout>
-      </AuthGuard>
+      </DashboardLayout>
     )
   }
 

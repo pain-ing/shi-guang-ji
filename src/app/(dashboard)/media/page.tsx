@@ -133,8 +133,7 @@ export default function MediaPage() {
 
   if (loading && mediaFiles.length === 0) {
     return (
-      <AuthGuard requireAuth={true}>
-        <DashboardLayout>
+      <DashboardLayout>
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h1 className="text-3xl font-bold tracking-tight">媒体库</h1>
@@ -151,8 +150,7 @@ export default function MediaPage() {
               ))}
             </div>
           </div>
-        </DashboardLayout>
-      </AuthGuard>
+      </DashboardLayout>
     )
   }
 

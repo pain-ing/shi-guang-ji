@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useToast } from '@/hooks/use-toast'
-import { AuthGuard } from '@/components/auth/AuthGuard'
+// AuthGuard已移除，直接在组件内处理重定向
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
 
 const registerSchema = z.object({

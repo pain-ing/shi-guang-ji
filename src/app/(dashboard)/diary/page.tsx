@@ -50,8 +50,7 @@ export default function DiaryPage() {
 
   if (loading) {
     return (
-      <AuthGuard requireAuth={true}>
-        <DashboardLayout>
+      <DashboardLayout>
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h1 className="text-3xl font-bold tracking-tight">我的日记</h1>
@@ -73,8 +72,7 @@ export default function DiaryPage() {
               ))}
             </div>
           </div>
-        </DashboardLayout>
-      </AuthGuard>
+      </DashboardLayout>
     )
   }
 

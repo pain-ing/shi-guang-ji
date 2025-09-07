@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,7 +14,7 @@ export default function EmergencyLoginPage() {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
-  const supabase = createClientComponentClient()
+  // 使用项目中统一的supabase客户端
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
