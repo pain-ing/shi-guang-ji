@@ -67,20 +67,11 @@ function LoginInner() {
     }
   }
 
-  // 如果还在初始化，显示加载状态
-  if (!initialized) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-sm text-muted-foreground">初始化中...</p>
-        </div>
-      </div>
-    )
-  }
+  // 如果还在初始化，不阻塞页面渲染
+  // 让用户可以看到登录表单
 
-  // 如果用户已登录，显示重定向提示
-  if (user) {
+  // 如果用户已登录且初始化完成，显示重定向提示
+  if (initialized && user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">

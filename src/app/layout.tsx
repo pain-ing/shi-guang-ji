@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/components/auth/AuthProvider";
+import { SimpleAuthProvider } from "@/components/auth/SimpleAuthProvider"
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -24,9 +24,9 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body className={`${inter.variable} font-sans antialiased`}>
         <ErrorBoundary>
-          <AuthProvider>
+          <SimpleAuthProvider>
             {children}
-          </AuthProvider>
+          </SimpleAuthProvider>
           <Toaster />
         </ErrorBoundary>
       </body>
