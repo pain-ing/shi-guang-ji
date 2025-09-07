@@ -30,14 +30,6 @@ function LoginInner() {
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') || '/dashboard'
 
-  // 如果用户已登录，直接重定向
-  useEffect(() => {
-    if (initialized && user) {
-      console.log('用户已登录，重定向到:', redirectTo)
-      router.replace(redirectTo)
-    }
-  }, [initialized, user, redirectTo, router])
-
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -61,7 +53,8 @@ function LoginInner() {
         title: '登录成功',
         description: '欢迎回到拾光集！',
       })
-      router.push(redirectTo)
+      // 登录成功后，让AuthGuard来处理重定向
+      console.log('登录成功，等待AuthGuard处理重定向')
     }
   }
 
@@ -77,19 +70,8 @@ function LoginInner() {
     )
   }
 
-  // 如果用户已登录，显示重定向提示
-  if (user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-sm text-muted-foreground">正在跳转...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
+    <AuthGuard requireAuth={false}>
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1">
@@ -186,6 +168,7 @@ function LoginInner() {
           </CardContent>
         </Card>
       </div>
+    </AuthGuard>
   )
 }
 

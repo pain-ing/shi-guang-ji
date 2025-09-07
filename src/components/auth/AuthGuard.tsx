@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/stores/authStore'
 import { LoadingPage } from '@/components/common/Loading'
@@ -18,6 +18,7 @@ export function AuthGuard({
 }: AuthGuardProps) {
   const { user, loading, initialized } = useAuthStore()
   const router = useRouter()
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   // 调试日志
   console.log('AuthGuard 状态:', {
@@ -26,6 +27,7 @@ export function AuthGuard({
     loading,
     initialized,
     redirectTo,
+    isRedirecting,
     pathname: typeof window !== 'undefined' ? window.location.pathname : 'server'
   })
 
@@ -38,33 +40,44 @@ export function AuthGuard({
     // 获取当前路径
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
 
+    // 需要认证但用户未登录
     if (requireAuth && !user) {
       console.log('AuthGuard: 需要认证但用户未登录，重定向到', redirectTo)
-      router.replace(redirectTo)
-    } else if (!requireAuth && user && !currentPath.startsWith('/dashboard')) {
-      // 只有当前不在 dashboard 相关页面时才重定向
-      console.log('AuthGuard: 不需要认证但用户已登录，重定向到 dashboard')
-      router.replace('/dashboard')
-    } else {
-      console.log('AuthGuard: 认证状态正确，显示内容')
+      setIsRedirecting(true)
+      const redirectUrl = currentPath !== '/' ? `${redirectTo}?redirectTo=${encodeURIComponent(currentPath)}` : redirectTo
+      router.replace(redirectUrl)
+      return
     }
+
+    // 不需要认证但用户已登录，且在认证页面（登录/注册页面）
+    if (!requireAuth && user && (currentPath.startsWith('/login') || currentPath.startsWith('/register'))) {
+      console.log('AuthGuard: 不需要认证但用户已登录，重定向到 dashboard')
+      setIsRedirecting(true)
+      router.replace('/dashboard')
+      return
+    }
+
+    // 其他情况不需要重定向
+    console.log('AuthGuard: 认证状态正确，显示内容')
+    setIsRedirecting(false)
   }, [user, loading, initialized, requireAuth, redirectTo, router])
 
-  // 显示加载状态
+  // 显示加载状态的情况：
+  // 1. 未初始化或正在加载
+  // 2. 需要认证但用户未登录（即将重定向）
+  // 3. 正在重定向
   if (!initialized || loading) {
     console.log('AuthGuard: 显示加载页面 - initialized:', initialized, 'loading:', loading)
     return <LoadingPage />
   }
 
-  // 如果需要认证但用户未登录，显示加载状态（即将重定向）
   if (requireAuth && !user) {
     console.log('AuthGuard: 需要认证但用户未登录，显示加载页面')
     return <LoadingPage />
   }
 
-  // 如果不需要认证但用户已登录，显示加载状态（即将重定向）
-  if (!requireAuth && user) {
-    console.log('AuthGuard: 不需要认证但用户已登录，显示加载页面')
+  if (isRedirecting) {
+    console.log('AuthGuard: 正在重定向，显示加载页面')
     return <LoadingPage />
   }
 
