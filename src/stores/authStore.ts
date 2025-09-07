@@ -39,40 +39,51 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   initialize: async () => {
     try {
       set({ loading: true })
-      
+
+      console.log('开始初始化认证状态')
+
       // 获取当前会话
       const { data: { session }, error } = await supabase.auth.getSession()
-      
+
       if (error) {
         console.error('获取会话失败:', error)
         return
       }
 
+      console.log('会话状态:', session ? '已登录' : '未登录')
+
       if (session) {
-        set({ 
-          user: session.user, 
+        set({
+          user: session.user,
           session,
         })
-        
-        // 获取用户资料
-        await get().fetchProfile()
+
+        // 异步获取用户资料，不阻塞初始化
+        get().fetchProfile().catch(error => {
+          console.error('获取用户资料失败，但不影响登录:', error)
+        })
       }
 
       // 监听认证状态变化
       supabase.auth.onAuthStateChange(async (event, session) => {
         console.log('认证状态变化:', event, session?.user?.email)
-        
-        set({ 
-          user: session?.user ?? null, 
+
+        set({
+          user: session?.user ?? null,
           session,
         })
 
         if (session?.user) {
-          await get().fetchProfile()
+          // 异步获取用户资料，不阻塞状态变化
+          get().fetchProfile().catch(error => {
+            console.error('获取用户资料失败，但不影响登录:', error)
+          })
         } else {
           set({ profile: null })
         }
       })
+
+      console.log('认证初始化完成')
 
     } catch (error) {
       console.error('初始化认证失败:', error)
@@ -87,20 +98,83 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     if (!user) return
 
     try {
+      console.log('开始获取用户资料:', user.id)
+
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single()
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('获取用户资料失败:', error)
+      if (error) {
+        console.error('获取用户资料失败:', {
+          code: error.code,
+          message: error.message,
+          details: error
+        })
+
+        // 如果用户资料不存在，创建一个默认的
+        if (error.code === 'PGRST116') {
+          console.log('用户资料不存在，创建默认资料')
+          try {
+            const { data: newProfile, error: createError } = await supabase
+              .from('profiles')
+              .insert({
+                id: user.id,
+                username: user.user_metadata?.username || user.email?.split('@')[0] || '用户',
+              })
+              .select()
+              .single()
+
+            if (createError) {
+              console.error('创建用户资料失败:', createError)
+              // 即使创建失败，也设置一个临时的 profile 对象
+              set({
+                profile: {
+                  id: user.id,
+                  username: user.user_metadata?.username || user.email?.split('@')[0] || '用户',
+                  avatar_url: null,
+                  bio: null,
+                  created_at: new Date().toISOString(),
+                  updated_at: new Date().toISOString()
+                }
+              })
+            } else {
+              set({ profile: newProfile })
+            }
+          } catch (createError) {
+            console.error('创建用户资料异常:', createError)
+            // 设置临时 profile
+            set({
+              profile: {
+                id: user.id,
+                username: user.user_metadata?.username || user.email?.split('@')[0] || '用户',
+                avatar_url: null,
+                bio: null,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              }
+            })
+          }
+        }
         return
       }
 
+      console.log('获取用户资料成功:', data)
       set({ profile: data })
     } catch (error) {
       console.error('获取用户资料异常:', error)
+      // 设置临时 profile，确保不会阻塞
+      set({
+        profile: {
+          id: user.id,
+          username: user.user_metadata?.username || user.email?.split('@')[0] || '用户',
+          avatar_url: null,
+          bio: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      })
     }
   },
 
