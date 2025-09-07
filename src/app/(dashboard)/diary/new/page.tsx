@@ -8,7 +8,7 @@ import * as z from 'zod'
 import { useAuthStore } from '@/stores/authStore'
 import { useDiaryStore } from '@/stores/diaryStore'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
-import { AuthGuard } from '@/components/auth/AuthGuard'
+// AuthGuard已通过中间件处理，不需要重复导入
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -105,8 +105,7 @@ export default function NewDiaryPage() {
   }
 
   return (
-    <AuthGuard requireAuth={true}>
-      <DashboardLayout>
+    <DashboardLayout>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -189,7 +188,6 @@ export default function NewDiaryPage() {
             </CardContent>
           </Card>
         </div>
-      </DashboardLayout>
-    </AuthGuard>
+    </DashboardLayout>
   )
 }

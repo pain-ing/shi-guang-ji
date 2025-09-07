@@ -2,7 +2,6 @@
 
 import { useAuthStore } from '@/stores/authStore'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
-import { AuthGuard } from '@/components/auth/AuthGuard'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Calendar, BookOpen, Camera, Heart, TrendingUp } from 'lucide-react'
@@ -45,9 +44,9 @@ export default function DashboardPage() {
     },
   ]
 
+  // 中间件已经处理了认证保护，不需要再使用AuthGuard包装
   return (
-    <AuthGuard requireAuth={true}>
-      <DashboardLayout>
+    <DashboardLayout>
         <div className="space-y-6">
           {/* 欢迎区域 */}
           <div className="flex items-center justify-between">
@@ -179,7 +178,6 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-      </DashboardLayout>
-    </AuthGuard>
+    </DashboardLayout>
   )
 }

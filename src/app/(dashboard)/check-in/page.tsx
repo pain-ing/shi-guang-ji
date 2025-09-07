@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useAuthStore } from '@/stores/authStore'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
-import { AuthGuard } from '@/components/auth/AuthGuard'
+// AuthGuard已通过中间件处理，不需要重复导入
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -107,8 +107,7 @@ export default function CheckInPage() {
   const hasCheckedInToday = todayCheckIn && isToday
 
   return (
-    <AuthGuard requireAuth={true}>
-      <DashboardLayout>
+    <DashboardLayout>
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">每日打卡</h1>
@@ -238,7 +237,6 @@ export default function CheckInPage() {
             </div>
           </div>
         </div>
-      </DashboardLayout>
-    </AuthGuard>
+    </DashboardLayout>
   )
 }

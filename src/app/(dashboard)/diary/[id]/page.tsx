@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useAuthStore } from '@/stores/authStore'
 import { useDiaryStore, diaryUtils } from '@/stores/diaryStore'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
-import { AuthGuard } from '@/components/auth/AuthGuard'
+// AuthGuard已通过中间件处理，不需要重复导入
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
@@ -154,8 +154,7 @@ export default function DiaryDetailPage() {
   }
 
   return (
-    <AuthGuard requireAuth={true}>
-      <DashboardLayout>
+    <DashboardLayout>
         <div className="space-y-6">
           {/* 头部导航 */}
           <div className="flex items-center justify-between">
@@ -231,7 +230,6 @@ export default function DiaryDetailPage() {
           onConfirm={handleDelete}
           variant="destructive"
         />
-      </DashboardLayout>
-    </AuthGuard>
+    </DashboardLayout>
   )
 }
