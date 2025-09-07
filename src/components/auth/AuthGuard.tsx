@@ -25,7 +25,8 @@ export function AuthGuard({
     user: user ? '已登录' : '未登录',
     loading,
     initialized,
-    redirectTo
+    redirectTo,
+    pathname: typeof window !== 'undefined' ? window.location.pathname : 'server'
   })
 
   useEffect(() => {
@@ -34,12 +35,15 @@ export function AuthGuard({
       return
     }
 
+    // 获取当前路径
+    const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
+
     if (requireAuth && !user) {
       console.log('AuthGuard: 需要认证但用户未登录，重定向到', redirectTo)
       router.replace(redirectTo)
-    } else if (!requireAuth && user) {
+    } else if (!requireAuth && user && !currentPath.startsWith('/dashboard')) {
+      // 只有当前不在 dashboard 相关页面时才重定向
       console.log('AuthGuard: 不需要认证但用户已登录，重定向到 dashboard')
-      // 使用 replace 而不是 push，避免重定向循环
       router.replace('/dashboard')
     } else {
       console.log('AuthGuard: 认证状态正确，显示内容')

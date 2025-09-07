@@ -74,13 +74,21 @@ export async function middleware(req: NextRequest) {
 
   // 访问控制与重定向
   if (isProtectedRoute && !session) {
+    console.log('Middleware: 受保护路由需要登录，重定向到登录页面', req.nextUrl.pathname)
     const redirectUrl = new URL('/login', req.url)
     redirectUrl.searchParams.set('redirectTo', req.nextUrl.pathname)
     return NextResponse.redirect(redirectUrl)
   }
 
+  // 暂时注释掉自动重定向，避免无限循环
+  // if (isAuthRoute && session) {
+  //   console.log('Middleware: 已登录用户访问认证页面，重定向到 dashboard')
+  //   return NextResponse.redirect(new URL('/dashboard', req.url))
+  // }
+
+  // 添加调试日志
   if (isAuthRoute && session) {
-    return NextResponse.redirect(new URL('/dashboard', req.url))
+    console.log('Middleware: 已登录用户访问认证页面，但暂时不重定向', req.nextUrl.pathname)
   }
 
   if (req.nextUrl.pathname === '/') {
