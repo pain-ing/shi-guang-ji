@@ -5,9 +5,12 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Calendar, BookOpen, Camera, Heart, TrendingUp } from 'lucide-react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function DashboardPage() {
-  const { user, profile } = useAuthStore()
+  const { user, profile, initialized } = useAuthStore()
+  const router = useRouter()
 
   const stats = [
     {
@@ -43,6 +46,26 @@ export default function DashboardPage() {
       bgColor: 'bg-pink-50',
     },
   ]
+
+  // 等待认证初始化
+  useEffect(() => {
+    if (initialized && !user) {
+      console.log('Dashboard: 用户未登录，重定向到登录页')
+      router.push('/login?redirectTo=/dashboard')
+    }
+  }, [initialized, user, router])
+
+  // 如果认证还未初始化或用户数据未加载，显示加载状态
+  if (!initialized || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-sm text-muted-foreground">加载中...</p>
+        </div>
+      </div>
+    )
+  }
 
   // 中间件已经处理了认证保护，不需要再使用AuthGuard包装
   return (
