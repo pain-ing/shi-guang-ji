@@ -119,7 +119,7 @@ export default function DiaryPage() {
               </form>
               {searchQuery && (
                 <div className="mt-2 text-sm text-muted-foreground">
-                  搜索"{searchQuery}"，找到 {totalCount} 条结果
+                  搜索&ldquo;{searchQuery}&rdquo;，找到 {totalCount} 条结果
                 </div>
               )}
             </CardContent>

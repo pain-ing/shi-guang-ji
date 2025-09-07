@@ -169,7 +169,7 @@ export default function CheckInPage() {
                         <FormField
                           control={form.control}
                           name="mood"
-                          render={({ field }) => (
+                          render={() => (
                             <FormItem>
                               <FormLabel>今天的心情</FormLabel>
                               <FormControl>

@@ -29,7 +29,7 @@ export function MarkdownEditor({
   const [isSaving, setIsSaving] = useState(false)
 
   // 自动保存功能
-  const { manualSave } = useAutoSave({
+  useAutoSave({
     data: content,
     onSave: async (data) => {
       if (onSave) {

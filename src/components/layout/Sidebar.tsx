@@ -10,7 +10,6 @@ import {
   BookOpen,
   Camera,
   User,
-  Settings,
   Heart,
 } from 'lucide-react'
 

@@ -76,7 +76,7 @@ export default function DiaryDetailPage() {
         })
         router.push('/diary')
       }
-    } catch (error) {
+    } catch {
       toast({
         title: '删除失败',
         description: '删除日记时出现错误',

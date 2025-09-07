@@ -25,7 +25,6 @@ import {
   Redo,
   Link as LinkIcon,
   Image as ImageIcon,
-  Type,
 } from 'lucide-react'
 
 interface DiaryEditorProps {
@@ -44,8 +43,6 @@ export function DiaryEditor({
   placeholder = '开始写下今天的故事...',
   editable = true,
   className,
-  autoSave = false,
-  onAutoSave,
 }: DiaryEditorProps) {
   const editor = useEditor({
     extensions: [

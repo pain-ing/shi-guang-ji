@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useMediaStore, mediaUtils } from '@/stores/mediaStore'
+import { MediaFile } from '@/types/database'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { AuthGuard } from '@/components/auth/AuthGuard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FileUpload } from '@/components/media/FileUpload'
 import { MediaGrid } from '@/components/media/MediaGrid'
 import { useToast } from '@/hooks/use-toast'
@@ -53,7 +54,7 @@ export default function MediaPage() {
   
   const [localSearchQuery, setLocalSearchQuery] = useState('')
   const [showUpload, setShowUpload] = useState(false)
-  const [selectedFiles, setSelectedFiles] = useState<any[]>([])
+  const [selectedFiles, setSelectedFiles] = useState<MediaFile[]>([])
   const [selectionMode, setSelectionMode] = useState(false)
 
   useEffect(() => {
@@ -78,12 +79,12 @@ export default function MediaPage() {
     filterByType(type)
   }
 
-  const handleUploadComplete = (files: any[]) => {
+  const handleUploadComplete = () => {
     setShowUpload(false)
     getMediaFiles() // 刷新文件列表
   }
 
-  const handleFileDelete = async (file: any) => {
+  const handleFileDelete = async (file: MediaFile) => {
     const { error } = await deleteFile(file.id)
     if (error) {
       toast({

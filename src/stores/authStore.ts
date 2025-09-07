@@ -104,23 +104,20 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  // 用户注册
+  // 用户注册（优先经由服务端 API，避免直连邮箱验证造成的 504）
   signUp: async (email: string, password: string, username?: string) => {
     try {
       set({ loading: true })
 
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            username: username || email.split('@')[0],
-          },
-        },
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, username }),
       })
 
-      if (error) {
-        return { error }
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}))
+        return { error: new Error(payload?.error || `注册失败（${res.status}）`) }
       }
 
       return { error: null }
@@ -131,20 +128,41 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  // 用户登录
+  // 用户登录（前置限流校验 + 成功/失败审计）
   signIn: async (email: string, password: string) => {
     try {
       set({ loading: true })
 
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      // 1) 前置限流校验
+      const pre = await fetch('/api/security/login-precheck', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
       })
+      if (!pre.ok) {
+        return { error: new Error('登录失败') }
+      }
+
+      // 2) 真正登录（由客户端建立会话）
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+
+      // 3) 审计上报（不影响主流程返回）
+      try {
+        await fetch('/api/security/audit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            eventType: error ? 'login_failed' : 'login_success',
+            success: !error,
+            userId: data?.user?.id ?? null,
+            details: { email },
+          }),
+        })
+      } catch {}
 
       if (error) {
         return { error }
       }
-
       return { error: null }
     } catch (error) {
       return { error: error as Error }
@@ -153,22 +171,27 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  // 用户登出
+  // 用户登出（记录审计日志）
   signOut: async () => {
     try {
       set({ loading: true })
-      
+      const { user } = get()
+
       const { error } = await supabase.auth.signOut()
-      
+
+      try {
+        await fetch('/api/security/audit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ eventType: 'logout', success: !error, userId: user?.id ?? null }),
+        })
+      } catch {}
+
       if (error) {
         console.error('登出失败:', error)
       }
 
-      set({ 
-        user: null, 
-        session: null, 
-        profile: null 
-      })
+      set({ user: null, session: null, profile: null })
     } catch (error) {
       console.error('登出异常:', error)
     } finally {

@@ -74,7 +74,7 @@ export function MediaGrid({
         title: '下载成功',
         description: `文件 ${file.filename} 已开始下载`,
       })
-    } catch (error) {
+    } catch {
       toast({
         title: '下载失败',
         description: '下载文件时出现错误',
@@ -90,7 +90,7 @@ export function MediaGrid({
         title: '链接已复制',
         description: '文件链接已复制到剪贴板',
       })
-    } catch (error) {
+    } catch {
       toast({
         title: '复制失败',
         description: '复制链接时出现错误',

@@ -87,10 +87,10 @@ export default function NewDiaryPage() {
       })
 
       router.push(`/diary/${diary!.id}`)
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: '保存失败',
-        description: error.message || '保存日记时出现错误',
+        description: error instanceof Error ? error.message : '保存日记时出现错误',
         variant: 'destructive',
       })
     } finally {
@@ -153,7 +153,7 @@ export default function NewDiaryPage() {
                   <FormField
                     control={form.control}
                     name="content"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem>
                         <FormLabel>内容</FormLabel>
                         <FormControl>

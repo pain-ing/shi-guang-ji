@@ -8,9 +8,10 @@ import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/hooks/use-toast'
 import { Upload, X, File, Image, Video, Music } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { MediaFile } from '@/types/database'
 
 interface FileUploadProps {
-  onUploadComplete?: (files: any[]) => void
+  onUploadComplete?: (files: MediaFile[]) => void
   maxFiles?: number
   acceptedTypes?: string[]
   className?: string
@@ -153,7 +154,7 @@ export function FileUpload({
         setSelectedFiles([])
         setUploadProgress({})
       }
-    } catch (error) {
+    } catch {
       toast({
         title: '上传失败',
         description: '文件上传时出现错误',

@@ -1,22 +1,22 @@
 import { useEffect, useRef, useCallback } from 'react'
 import { useToast } from '@/hooks/use-toast'
 
-interface UseAutoSaveOptions {
-  data: any
-  onSave: (data: any) => Promise<void>
+interface UseAutoSaveOptions<T = unknown> {
+  data: T
+  onSave: (data: T) => Promise<void>
   delay?: number
   enabled?: boolean
 }
 
-export function useAutoSave({
+export function useAutoSave<T = unknown>({
   data,
   onSave,
   delay = 30000, // 30秒
   enabled = true,
-}: UseAutoSaveOptions) {
+}: UseAutoSaveOptions<T>) {
   const { toast } = useToast()
   const timeoutRef = useRef<NodeJS.Timeout>()
-  const lastSavedDataRef = useRef<any>()
+  const lastSavedDataRef = useRef<T>()
   const isSavingRef = useRef(false)
 
   const save = useCallback(async () => {

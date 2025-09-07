@@ -61,7 +61,7 @@ export default function ProfilePage() {
         })
         setIsEditing(false)
       }
-    } catch (error) {
+    } catch {
       toast({
         title: '更新失败',
         description: '更新个人资料时出现错误',

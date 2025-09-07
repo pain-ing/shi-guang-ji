@@ -96,10 +96,10 @@ export function AvatarUpload({
         title: '头像更新成功',
         description: '您的头像已更新',
       })
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: '上传失败',
-        description: error.message || '上传头像时出现错误',
+        description: error instanceof Error ? error.message : '上传头像时出现错误',
         variant: 'destructive',
       })
     } finally {

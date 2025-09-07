@@ -22,7 +22,7 @@ interface CheckInActions {
 
 type CheckInStore = CheckInState & CheckInActions
 
-export const useCheckInStore = create<CheckInStore>((set, get) => ({
+export const useCheckInStore = create<CheckInStore>((set) => ({
   // 初始状态
   checkIns: [],
   todayCheckIn: null,
@@ -226,7 +226,7 @@ export const checkInUtils = {
     )
 
     let streak = 0
-    let currentDate = new Date()
+    const currentDate = new Date()
     currentDate.setHours(0, 0, 0, 0)
 
     for (const checkIn of sortedCheckIns) {

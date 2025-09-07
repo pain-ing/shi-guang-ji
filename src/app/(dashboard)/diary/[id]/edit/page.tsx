@@ -101,7 +101,7 @@ export default function EditDiaryPage() {
     try {
       setIsSaving(true)
 
-      const { data: updatedDiary, error } = await updateDiary(currentDiary.id, {
+      const { error } = await updateDiary(currentDiary.id, {
         title: data.title,
         content: data.content,
       })
@@ -123,10 +123,10 @@ export default function EditDiaryPage() {
 
         router.push(`/diary/${currentDiary.id}`)
       }
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: '保存失败',
-        description: error.message || '保存日记时出现错误',
+        description: error instanceof Error ? error.message : '保存日记时出现错误',
         variant: 'destructive',
       })
     } finally {
@@ -254,7 +254,7 @@ export default function EditDiaryPage() {
                   <FormField
                     control={form.control}
                     name="content"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem>
                         <FormLabel>内容</FormLabel>
                         <FormControl>
