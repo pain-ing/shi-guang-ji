@@ -11,7 +11,7 @@ export async function POST(req: Request) {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !anonKey) {
-    return NextResponse.json({ error: 'Server is not configured' }, { status: 500 })
+    return NextResponse.json({ error: '服务端未配置 Supabase 环境变量' }, { status: 500 })
   }
 
   try {
@@ -19,12 +19,13 @@ export async function POST(req: Request) {
 
     if (!email || !password) {
       await logEvent({ req, eventType: 'sign_up_failed', success: false, details: { reason: 'missing_email_or_password' } })
-      return NextResponse.json({ error: '注册失败' }, { status: 400 })
+      return NextResponse.json({ error: '邮箱与密码为必填' }, { status: 400 })
     }
 
     if (!isStrongPassword(password)) {
-      await logEvent({ req, eventType: 'sign_up_failed', success: false, details: { reason: 'weak_password', issue: passwordIssue(password) } })
-      return NextResponse.json({ error: '注册失败' }, { status: 400 })
+      const issue = passwordIssue(password)
+      await logEvent({ req, eventType: 'sign_up_failed', success: false, details: { reason: 'weak_password', issue } })
+      return NextResponse.json({ error: `密码不符合要求：${issue}` }, { status: 400 })
     }
 
     const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || ''
@@ -42,8 +43,15 @@ export async function POST(req: Request) {
     })
 
     if (error) {
-      await logEvent({ req, eventType: 'sign_up_failed', success: false, details: { reason: 'supabase_error' } })
-      return NextResponse.json({ error: '注册失败' }, { status: 400 })
+      let message = '注册失败'
+      const code = (error as any).code || error.message
+      if (code === 'user_already_exists' || /User already registered/i.test(error.message)) {
+        message = '该邮箱已注册'
+      } else if (/rate/i.test(error.message)) {
+        message = '请求过于频繁，请稍后再试'
+      }
+      await logEvent({ req, eventType: 'sign_up_failed', success: false, details: { reason: 'supabase_error', code, msg: error.message } })
+      return NextResponse.json({ error: message }, { status: 400 })
     }
 
     await logEvent({ req, userId: data.user?.id ?? null, eventType: 'sign_up_success', success: true, details: { email } })

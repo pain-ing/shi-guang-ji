@@ -1,11 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string | undefined
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string | undefined
 
-function getAdminClient() {
+// 返回可用的 admin client；若环境未配置则返回 null，避免影响主流程
+function getAdminClientOrNull() {
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error('Server is not configured')
+    return null
   }
   return createClient(supabaseUrl, serviceRoleKey, { auth: { autoRefreshToken: false, persistSession: false } })
 }
@@ -28,9 +29,13 @@ export async function logEvent(params: {
   details?: Record<string, unknown>
 }) {
   const { req, userId = null, eventType, success, details } = params
-  const { ip, userAgent } = getRequestInfo(req)
-  const admin = getAdminClient()
   try {
+    const { ip, userAgent } = getRequestInfo(req)
+    const admin = getAdminClientOrNull()
+    if (!admin) {
+      // 未配置服务端密钥时静默跳过
+      return
+    }
     await admin.from('audit_logs').insert({
       user_id: userId ?? null,
       event_type: eventType,

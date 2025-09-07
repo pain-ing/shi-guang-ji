@@ -18,7 +18,10 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react'
 const registerSchema = z.object({
   username: z.string().min(2, '用户名至少需要2个字符').max(50, '用户名不能超过50个字符'),
   email: z.string().email('请输入有效的邮箱地址'),
-  password: z.string().min(6, '密码至少需要6个字符'),
+  password: z.string()
+    .min(10, '密码至少需要10个字符')
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{10,}$/,
+      '密码必须包含大小写字母、数字和特殊字符'),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: '两次输入的密码不一致',
@@ -122,7 +125,7 @@ export default function RegisterPage() {
                         <div className="relative">
                           <Input
                             type={showPassword ? 'text' : 'password'}
-                            placeholder="请输入密码（至少6个字符）"
+                            placeholder="请输入密码（至少10个字符，包含大小写字母、数字和特殊字符）"
                             {...field}
                           />
                           <Button
