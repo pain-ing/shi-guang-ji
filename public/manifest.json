@@ -1,0 +1,134 @@
+{
+  "name": "拾光集",
+  "short_name": "拾光集",
+  "description": "记录美好时光的个人生活记录应用",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#6d49ff",
+  "orientation": "portrait-primary",
+  "categories": ["lifestyle", "productivity", "personalization"],
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "拾光集桌面版首页"
+    },
+    {
+      "src": "/screenshots/mobile-1.png",
+      "sizes": "360x640",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "拾光集手机版首页"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "今日打卡",
+      "short_name": "打卡",
+      "description": "快速进行今日打卡",
+      "url": "/check-in",
+      "icons": [
+        {
+          "src": "/icons/shortcut-checkin.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "写日记",
+      "short_name": "日记",
+      "description": "记录今天的美好时光",
+      "url": "/diary/new",
+      "icons": [
+        {
+          "src": "/icons/shortcut-diary.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "上传照片",
+      "short_name": "照片",
+      "description": "分享美好瞬间",
+      "url": "/media",
+      "icons": [
+        {
+          "src": "/icons/shortcut-media.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": ["image/*"]
+        }
+      ]
+    }
+  }
+}

@@ -3,6 +3,7 @@
 import { Header } from './Header'
 import { Sidebar } from './Sidebar'
 import { Toaster } from '@/components/ui/toaster'
+import { InstallPrompt } from '@/components/pwa/InstallPrompt'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -22,6 +23,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </main>
       </div>
+      <InstallPrompt />
       <Toaster />
     </div>
   )
