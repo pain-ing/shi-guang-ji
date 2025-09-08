@@ -172,21 +172,31 @@
   .bg-mood-worried { background-color: hsl(var(--mood-worried)); }
   
   /* 樱花动画 */
-  .sakura-petal {
+  /* 外层包裹元素负责下落，避免 transform 冲突 */
+  .sakura-petal-wrap {
     position: absolute;
     top: -10vh;
+    left: 0;
+    animation: sakura-fall linear infinite;
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  /* 内层花瓣负责摆动和旋转 */
+  .sakura-petal {
+    position: relative;
     border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
     opacity: 0.9;
     filter: drop-shadow(0 2px 6px hsl(330 40% 50% / 0.4));
-    animation: sakura-fall linear infinite, sakura-sway ease-in-out infinite;
+    animation: sakura-sway ease-in-out infinite;
     transform: rotate(var(--rotate, 0deg));
-    z-index: 9999;
     will-change: transform;
+    pointer-events: none;
   }
 
   @keyframes sakura-fall {
-    0% { transform: translateY(-10vh) rotate(var(--rotate, 0deg)); }
-    100% { transform: translateY(110vh) rotate(calc(var(--rotate, 0deg) + 360deg)); }
+    0% { transform: translateY(-10vh); }
+    100% { transform: translateY(110vh); }
   }
   @keyframes sakura-sway {
     0%, 100% { transform: translateX(0) rotate(var(--rotate, 0deg)); }

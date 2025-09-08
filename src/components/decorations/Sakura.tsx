@@ -41,18 +41,25 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
     container.innerHTML = '';
 
     const createPetal = (i: number) => {
-      const petal = document.createElement('div');
-      petal.className = 'sakura-petal';
+      // 外层包裹用于下落动画
+      const wrap = document.createElement('div');
+      wrap.className = 'sakura-petal-wrap';
 
       const startLeft = Math.random() * 100; // vw
-      const size = 25 + Math.random() * 15; // 进一步增大尺寸: 25-40px
-      const duration = (3 + Math.random() * 2) / speedFactor; // 大幅加快: 3-5秒
-      const delay = Math.random() * 1; // 减少延迟到最多1秒
+      const size = 25 + Math.random() * 15; // 25-40px
+      const duration = (3 + Math.random() * 2) / speedFactor; // 3-5秒
+      const delay = Math.random() * 1; // 最多1秒
       const sway = 30 + Math.random() * 30; // px
       const rotate = Math.random() * 360;
       const g = gradients[i % gradients.length];
 
-      petal.style.left = `${startLeft}vw`;
+      wrap.style.left = `${startLeft}vw`;
+      wrap.style.animationDuration = `${duration}s`;
+      wrap.style.animationDelay = `${delay}s`;
+
+      // 内层花瓣用于摇摆和旋转
+      const petal = document.createElement('div');
+      petal.className = 'sakura-petal';
       petal.style.width = `${size}px`;
       petal.style.height = `${size * 0.8}px`;
       petal.style.animationDuration = `${duration}s`;
@@ -60,16 +67,15 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       petal.style.setProperty('--sway', `${sway}px`);
       petal.style.setProperty('--rotate', `${rotate}deg`);
       // 使用青色系列供测试
-      petal.style.background = '#00bcd4'; // 青色 (Cyan)
-      petal.style.zIndex = '9999';
-      petal.style.position = 'absolute';
+      petal.style.background = '#00bcd4'; // Cyan
       petal.style.opacity = '1';
       petal.style.pointerEvents = 'none';
-      
+
       // 添加调试信息
       console.log(`Created petal ${i}: left=${startLeft}vw, size=${size}px, duration=${duration}s`);
 
-      container.appendChild(petal);
+      wrap.appendChild(petal);
+      container.appendChild(wrap);
     };
 
     for (let i = 0; i < count; i++) createPetal(i);
