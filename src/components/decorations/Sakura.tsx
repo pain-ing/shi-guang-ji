@@ -27,7 +27,10 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
 
   useEffect(() => {
     console.log('Sakura: enabled =', enabled, 'density =', density, 'speed =', speed);
-    if (!enabled || !containerRef.current) return;
+    if (!enabled || !containerRef.current) {
+      console.log('Sakura: Not creating petals - enabled:', enabled, 'containerRef:', !!containerRef.current);
+      return;
+    }
 
     const container = containerRef.current;
     const count = Math.min(Math.max(density, 10), 150);
@@ -95,9 +98,11 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
     }
 
     return () => {
-      container.innerHTML = '';
+      if (container) {
+        container.innerHTML = '';
+      }
     };
-  }, [enabled, density, speed]);
+  }, [enabled, density, speed, butterfliesEnabled, butterfliesCount, starlightEnabled, starlightDensity]);
 
   return (
     <div
