@@ -46,7 +46,11 @@ export const ThemeSettingsPage: React.FC = () => {
     customThemes,
     toggleAutoSwitch,
     setDarkModeSchedule,
-    deleteCustomTheme
+    deleteCustomTheme,
+    decorations,
+    setSakuraEnabled,
+    setSakuraDensity,
+    setSakuraSpeed,
   } = useThemeStore();
 
   const [previewMode, setPreviewMode] = useState(false);
@@ -197,6 +201,63 @@ export const ThemeSettingsPage: React.FC = () => {
                     </Button>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+
+            {/* 氛围特效：樱花飘落 */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  <CardTitle className="text-lg">氛围特效</CardTitle>
+                </div>
+                <CardDescription>
+                  为界面增添浪漫的樱花飘落效果
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="sakura-enabled">启用樱花飘落</Label>
+                  <Switch
+                    id="sakura-enabled"
+                    checked={decorations.sakuraEnabled}
+                    onCheckedChange={setSakuraEnabled}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="sakura-density">樱花密度</Label>
+                    <span className="text-xs text-muted-foreground">{decorations.sakuraDensity}</span>
+                  </div>
+                  <input
+                    id="sakura-density"
+                    type="range"
+                    min={10}
+                    max={150}
+                    step={1}
+                    value={decorations.sakuraDensity}
+                    onChange={(e) => setSakuraDensity(Number(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="sakura-speed">飘落速度</Label>
+                    <span className="text-xs text-muted-foreground">{decorations.sakuraSpeed.toFixed(1)}x</span>
+                  </div>
+                  <input
+                    id="sakura-speed"
+                    type="range"
+                    min={0.5}
+                    max={2}
+                    step={0.1}
+                    value={decorations.sakuraSpeed}
+                    onChange={(e) => setSakuraSpeed(Number(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
               </CardContent>
             </Card>
 

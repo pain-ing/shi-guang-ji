@@ -21,6 +21,16 @@ interface ThemeState {
     startTime: string; // "22:00"
     endTime: string;   // "06:00"
   };
+
+  // 氛围特效设置
+  decorations: {
+    sakuraEnabled: boolean;
+    sakuraDensity: number; // 10-150
+    sakuraSpeed: number;   // 0.5 - 2.0
+  };
+  setSakuraEnabled: (enabled: boolean) => void;
+  setSakuraDensity: (density: number) => void;
+  setSakuraSpeed: (speed: number) => void;
   
   // 操作方法
   setTheme: (themeId: string) => void;
@@ -47,6 +57,25 @@ export const useThemeStore = create<ThemeState>()(
       darkModeSchedule: {
         startTime: '22:00',
         endTime: '06:00'
+      },
+
+      // 氛围特效默认设置
+      decorations: {
+        sakuraEnabled: true,
+        sakuraDensity: 40,
+        sakuraSpeed: 1,
+      },
+
+      setSakuraEnabled: (enabled: boolean) => {
+        set(state => ({ decorations: { ...state.decorations, sakuraEnabled: enabled } }));
+      },
+      setSakuraDensity: (density: number) => {
+        const d = Math.max(10, Math.min(150, Math.round(density)));
+        set(state => ({ decorations: { ...state.decorations, sakuraDensity: d } }));
+      },
+      setSakuraSpeed: (speed: number) => {
+        const s = Math.max(0.5, Math.min(2, speed));
+        set(state => ({ decorations: { ...state.decorations, sakuraSpeed: s } }));
       },
 
       setTheme: (themeId: string) => {
@@ -212,7 +241,8 @@ export const useThemeStore = create<ThemeState>()(
         currentThemeId: state.currentThemeId,
         customThemes: state.customThemes,
         autoSwitchEnabled: state.autoSwitchEnabled,
-        darkModeSchedule: state.darkModeSchedule
+        darkModeSchedule: state.darkModeSchedule,
+        decorations: state.decorations,
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {

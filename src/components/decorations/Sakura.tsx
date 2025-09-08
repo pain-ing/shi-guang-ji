@@ -6,6 +6,7 @@ interface SakuraProps {
   enabled?: boolean;
   density?: number; // 10 - 150
   zIndex?: number;
+  speed?: number; // 0.5 - 2.0 倍速
 }
 
 // 渐变色组：粉 -> 樱粉 -> 紫粉
@@ -17,7 +18,7 @@ const gradients = [
   ['hsl(300 90% 90%)', 'hsl(280 90% 85%)'],
 ];
 
-export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zIndex = 10 }) => {
+export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zIndex = 10, speed = 1 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
 
     const container = containerRef.current;
     const count = Math.min(Math.max(density, 10), 150);
+    const speedFactor = Math.max(0.5, Math.min(2, speed));
 
     // 清空旧元素
     container.innerHTML = '';
@@ -35,7 +37,7 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
 
       const startLeft = Math.random() * 100; // vw
       const size = 8 + Math.random() * 10; // px
-      const duration = 10 + Math.random() * 14; // s
+      const duration = (10 + Math.random() * 14) / speedFactor; // s, 受速度影响
       const delay = Math.random() * 10; // s
       const sway = 30 + Math.random() * 30; // px
       const rotate = Math.random() * 360;
@@ -58,7 +60,7 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
     return () => {
       container.innerHTML = '';
     };
-  }, [enabled, density]);
+  }, [enabled, density, speed]);
 
   return (
     <div
