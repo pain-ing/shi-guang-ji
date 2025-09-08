@@ -8,7 +8,7 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Calendar, BookOpen, Camera, Heart, TrendingUp } from 'lucide-react'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function DashboardPage() {
@@ -17,6 +17,28 @@ export default function DashboardPage() {
   const { diaries, getDiaries } = useDiaryStore()
   const { mediaFiles, getMediaFiles } = useMediaStore()
   const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // 页面跳转处理函数
+  const handleGoToCheckIn = () => {
+    router.push('/check-in')
+  }
+
+  const handleGoToDiary = () => {
+    router.push('/diary/new')
+  }
+
+  const handleGoToMedia = () => {
+    router.push('/media')
+  }
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (files && files.length > 0) {
+      // 直接跳转到媒体页面，用户可以在那里上传文件
+      router.push('/media')
+    }
+  }
 
   // 计算统计数据
   const stats = useMemo(() => {
@@ -139,11 +161,11 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="flex space-x-2">
-              <Button>
+              <Button onClick={handleGoToCheckIn}>
                 <Calendar className="mr-2 h-4 w-4" />
                 今日打卡
               </Button>
-              <Button variant="outline">
+              <Button variant="outline" onClick={handleGoToDiary}>
                 <BookOpen className="mr-2 h-4 w-4" />
                 写日记
               </Button>
@@ -185,7 +207,7 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button className="w-full">立即打卡</Button>
+                <Button className="w-full" onClick={handleGoToCheckIn}>立即打卡</Button>
               </CardContent>
             </Card>
 
@@ -200,7 +222,7 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="outline" className="w-full">开始写作</Button>
+                <Button variant="outline" className="w-full" onClick={handleGoToDiary}>开始写作</Button>
               </CardContent>
             </Card>
 
@@ -215,7 +237,16 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="outline" className="w-full">选择照片</Button>
+                <Button variant="outline" className="w-full" onClick={handleGoToMedia}>选择照片</Button>
+                {/* 隐藏的文件输入框 */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleFileSelect}
+                />
               </CardContent>
             </Card>
           </div>
