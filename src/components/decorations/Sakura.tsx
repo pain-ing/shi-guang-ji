@@ -46,8 +46,8 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
 
       const startLeft = Math.random() * 100; // vw
       const size = 15 + Math.random() * 10; // 增大尺寸便于观察
-      const duration = (8 + Math.random() * 6) / speedFactor; // 加快速度
-      const delay = Math.random() * 3; // 减少延迟
+      const duration = (3 + Math.random() * 2) / speedFactor; // 大幅加快: 3-5秒
+      const delay = Math.random() * 1; // 减少延迟到最多1秒
       const sway = 30 + Math.random() * 30; // px
       const rotate = Math.random() * 360;
       const g = gradients[i % gradients.length];
@@ -59,9 +59,12 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       petal.style.animationDelay = `${delay}s`;
       petal.style.setProperty('--sway', `${sway}px`);
       petal.style.setProperty('--rotate', `${rotate}deg`);
-      petal.style.background = `linear-gradient(135deg, ${g[0]}, ${g[1]})`;
+      // 使用非常明显的颜色供测试
+      petal.style.background = i < 5 ? '#ff0080' : `linear-gradient(135deg, ${g[0]}, ${g[1]})`;
       petal.style.zIndex = '9999';
       petal.style.position = 'absolute';
+      petal.style.opacity = '1';
+      petal.style.pointerEvents = 'none';
       
       // 添加调试信息
       console.log(`Created petal ${i}: left=${startLeft}vw, size=${size}px, duration=${duration}s`);
