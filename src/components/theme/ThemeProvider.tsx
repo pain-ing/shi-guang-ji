@@ -2,13 +2,14 @@
 
 import React, { useEffect } from 'react';
 import { useThemeStore } from '@/stores/themeStore';
+import { applyTheme } from '@/lib/themes';
 
 interface ThemeProviderProps {
   children: React.ReactNode;
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const initializeTheme = useThemeStore(state => state.initializeTheme);
+  const { initializeTheme, currentTheme } = useThemeStore();
 
   useEffect(() => {
     // 初始化主题
@@ -25,10 +26,18 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     };
 
     // 延迟添加过渡效果，避免初始化时的闪烁
-    const timer = setTimeout(addThemeTransitions, 100);
+    const timer = setTimeout(addThemeTransitions, 200);
 
     return () => clearTimeout(timer);
   }, [initializeTheme]);
+
+  // 监听主题变化并确保正确应用
+  useEffect(() => {
+    if (currentTheme && typeof window !== 'undefined') {
+      // 在主题变化时重新应用
+      applyTheme(currentTheme);
+    }
+  }, [currentTheme]);
 
   return <>{children}</>;
 };

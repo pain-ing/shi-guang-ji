@@ -154,17 +154,26 @@ export const useThemeStore = create<ThemeState>()(
 
       initializeTheme: () => {
         const { currentThemeId } = get();
-        const theme = getTheme(currentThemeId);
+        let theme = getTheme(currentThemeId);
+        
+        // 如果没有存储的主题ID或主题不存在，使用默认主题
+        if (!currentThemeId || currentThemeId === 'default' || !theme) {
+          theme = themes[0]; // 确保使用我们定义的默认主题
+        }
         
         set({
+          currentThemeId: theme.id,
           currentTheme: theme
         });
 
         if (typeof window !== 'undefined') {
           applyTheme(theme);
           
-          // 检查自动切换
-          get().checkAutoSwitch();
+          // 只有在明确启用自动切换时才检查
+          const { autoSwitchEnabled } = get();
+          if (autoSwitchEnabled) {
+            get().checkAutoSwitch();
+          }
         }
       },
 
@@ -219,35 +228,14 @@ export const useThemeStore = create<ThemeState>()(
 
 // 自动检查主题切换的定时器
 if (typeof window !== 'undefined') {
-  // 每分钟检查一次
+  // 每分钟检查一次自动切换
   setInterval(() => {
     const store = useThemeStore.getState();
-    store.checkAutoSwitch();
+    if (store.autoSwitchEnabled) {
+      store.checkAutoSwitch();
+    }
   }, 60 * 1000);
   
-  // 监听系统主题变化
-  if (window.matchMedia) {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-      const store = useThemeStore.getState();
-      
-      // 只有在未开启自动切换时才跟随系统主题
-      if (!store.autoSwitchEnabled) {
-        const shouldUseDark = e.matches;
-        const currentTheme = store.currentThemeId;
-        
-        if (shouldUseDark && currentTheme !== 'dark') {
-          store.setTheme('dark');
-        } else if (!shouldUseDark && currentTheme === 'dark') {
-          store.setTheme('default');
-        }
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleSystemThemeChange);
-    
-    // 初始检查
-    handleSystemThemeChange({ matches: mediaQuery.matches } as MediaQueryListEvent);
-  }
+  // 暂时禁用系统主题自动跟随，让用户完全控制主题
+  // 如果需要可以在主题设置中添加一个开关来启用此功能
 }
