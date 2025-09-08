@@ -83,16 +83,27 @@ function LoginInner() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
-            <div className="flex items-center justify-center mb-4">
-              <div className="h-8 w-8 rounded-full bg-primary" />
-              <span className="ml-2 text-xl font-bold">拾光集</span>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-purple-50 to-cyan-50 py-12 px-4 sm:px-6 lg:px-8">
+      {/* 背景装饰元素 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-primary opacity-10 blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-secondary opacity-10 blur-3xl animate-pulse" />
+      </div>
+      
+        <Card className="w-full max-w-md glassmorphism card-gradient-shadow hover-lift border-0">
+          <CardHeader className="space-y-1 text-center">
+            <div className="flex items-center justify-center mb-6">
+              <div className="relative">
+                <div className="h-12 w-12 rounded-full bg-gradient-primary animate-gradient" />
+                <div className="absolute inset-0 h-12 w-12 rounded-full bg-gradient-primary opacity-75 animate-ping" />
+              </div>
+              <span className="ml-3 text-2xl font-bold text-gradient-primary">拾光集</span>
             </div>
-            <CardTitle className="text-2xl text-center">欢迎回来</CardTitle>
-            <CardDescription className="text-center">
-              登录您的账户以继续记录美好时光
+            <CardTitle className="text-3xl text-center bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
+              欢迎回来
+            </CardTitle>
+            <CardDescription className="text-center text-muted-foreground">
+              登录您的账户，继续记录美好时光 ✨
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -155,26 +166,37 @@ function LoginInner() {
                     忘记密码？
                   </Link>
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-primary hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 text-white font-medium py-2.5" 
+                  disabled={loading}
+                >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  登录
+                  {loading ? '登录中...' : '登录账户'}
                 </Button>
               </form>
             </Form>
-            <div className="mt-6">
+            <div className="mt-8 space-y-4">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300" />
+                  <div className="w-full border-t border-gradient" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">还没有账户？</span>
+                  <span className="px-4 bg-card text-muted-foreground font-medium">还没有账户？</span>
                 </div>
               </div>
-              <div className="mt-6">
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/register">注册新账户</Link>
-                </Button>
-              </div>
+              <Button 
+                variant="outline" 
+                className="w-full border-gradient hover:bg-gradient-primary hover:text-white transition-all duration-300 font-medium py-2.5" 
+                asChild
+              >
+                <Link href="/register">
+                  <span className="flex items-center">
+                    注册新账户
+                    <span className="ml-2">→</span>
+                  </span>
+                </Link>
+              </Button>
             </div>
           </CardContent>
         </Card>

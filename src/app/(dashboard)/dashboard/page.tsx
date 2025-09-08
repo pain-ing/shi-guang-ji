@@ -149,95 +149,142 @@ export default function DashboardPage() {
   // 中间件已经处理了认证保护，不需要再使用AuthGuard包装
   return (
     <DashboardLayout>
-        <div className="space-y-6">
+      <div className="relative min-h-screen">
+        {/* 背景装饰 */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-gradient-primary opacity-5 blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-gradient-secondary opacity-5 blur-3xl" />
+        </div>
+        
+        <div className="relative space-y-8">
           {/* 欢迎区域 */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">
+          <div className="flex items-center justify-between p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-purple/10 to-cyan/10 border border-gradient glassmorphism">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
                 欢迎回来，{profile?.username || user?.email?.split('@')[0]}！
               </h1>
-              <p className="text-muted-foreground">
-                今天是记录美好时光的好日子
+              <p className="text-lg text-muted-foreground flex items-center">
+                今天是记录美好时光的好日子 ✨
               </p>
             </div>
-            <div className="flex space-x-2">
-              <Button onClick={handleGoToCheckIn}>
-                <Calendar className="mr-2 h-4 w-4" />
+            <div className="flex space-x-3">
+              <Button 
+                onClick={handleGoToCheckIn}
+                className="bg-gradient-primary hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 text-white px-6 py-3 rounded-xl font-medium"
+              >
+                <Calendar className="mr-2 h-5 w-5" />
                 今日打卡
               </Button>
-              <Button variant="outline" onClick={handleGoToDiary}>
-                <BookOpen className="mr-2 h-4 w-4" />
+              <Button 
+                variant="outline" 
+                onClick={handleGoToDiary}
+                className="border-gradient hover:bg-gradient-secondary hover:text-white transition-all duration-300 px-6 py-3 rounded-xl font-medium"
+              >
+                <BookOpen className="mr-2 h-5 w-5" />
                 写日记
               </Button>
             </div>
           </div>
 
           {/* 统计卡片 */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat) => (
-              <Card key={stat.title}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {stat.title}
-                  </CardTitle>
-                  <div className={`h-8 w-8 rounded-full ${stat.bgColor} flex items-center justify-center`}>
-                    <stat.icon className={`h-4 w-4 ${stat.color}`} />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground">
-                    {stat.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {stats.map((stat, index) => {
+              const gradients = [
+                'bg-gradient-to-br from-blue-500 to-cyan-500',
+                'bg-gradient-to-br from-green-500 to-emerald-500', 
+                'bg-gradient-to-br from-purple-500 to-pink-500',
+                'bg-gradient-to-br from-orange-500 to-red-500'
+              ];
+              return (
+                <Card key={stat.title} className="glassmorphism card-gradient-shadow hover-lift border-0 overflow-hidden">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                      {stat.title}
+                    </CardTitle>
+                    <div className={`h-12 w-12 rounded-xl ${gradients[index]} flex items-center justify-center shadow-lg`}>
+                      <stat.icon className="h-6 w-6 text-white" />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pb-6">
+                    <div className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
+                      {stat.value}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {stat.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
 
           {/* 快速操作 */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Calendar className="mr-2 h-5 w-5" />
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card className="glassmorphism card-gradient-shadow hover-lift border-0 group">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center text-lg">
+                  <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 mr-3">
+                    <Calendar className="h-5 w-5 text-white" />
+                  </div>
                   今日打卡
                 </CardTitle>
-                <CardDescription>
-                  记录今天的心情和状态
+                <CardDescription className="text-muted-foreground">
+                  记录今天的心情和状态 😊
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button className="w-full" onClick={handleGoToCheckIn}>立即打卡</Button>
+                <Button 
+                  className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:shadow-lg hover:shadow-blue/25 transition-all duration-300 text-white font-medium py-3 rounded-xl" 
+                  onClick={handleGoToCheckIn}
+                >
+                  立即打卡
+                </Button>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <BookOpen className="mr-2 h-5 w-5" />
+            <Card className="glassmorphism card-gradient-shadow hover-lift border-0 group">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center text-lg">
+                  <div className="p-2 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 mr-3">
+                    <BookOpen className="h-5 w-5 text-white" />
+                  </div>
                   写日记
                 </CardTitle>
-                <CardDescription>
-                  记录今天发生的有趣事情
+                <CardDescription className="text-muted-foreground">
+                  记录今天发生的有趣事情 ✍️
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="outline" className="w-full" onClick={handleGoToDiary}>开始写作</Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-gradient hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:text-white hover:border-transparent transition-all duration-300 font-medium py-3 rounded-xl" 
+                  onClick={handleGoToDiary}
+                >
+                  开始写作
+                </Button>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Camera className="mr-2 h-5 w-5" />
+            <Card className="glassmorphism card-gradient-shadow hover-lift border-0 group md:col-span-2 lg:col-span-1">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center text-lg">
+                  <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 mr-3">
+                    <Camera className="h-5 w-5 text-white" />
+                  </div>
                   上传照片
                 </CardTitle>
-                <CardDescription>
-                  分享今天拍摄的美好瞬间
+                <CardDescription className="text-muted-foreground">
+                  分享今天拍摄的美好瞬间 📸
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="outline" className="w-full" onClick={handleGoToMedia}>选择照片</Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-gradient hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white hover:border-transparent transition-all duration-300 font-medium py-3 rounded-xl" 
+                  onClick={handleGoToMedia}
+                >
+                  选择照片
+                </Button>
                 {/* 隐藏的文件输入框 */}
                 <input
                   ref={fileInputRef}
@@ -252,14 +299,18 @@ export default function DashboardPage() {
           </div>
 
           {/* 最近活动 */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <TrendingUp className="mr-2 h-5 w-5" />
-                最近活动
+          <Card className="glassmorphism card-gradient-shadow border-0">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center text-xl">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 mr-3">
+                  <TrendingUp className="h-5 w-5 text-white" />
+                </div>
+                <span className="bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
+                  最近活动
+                </span>
               </CardTitle>
-              <CardDescription>
-                您最近的记录和动态
+              <CardDescription className="text-muted-foreground ml-11">
+                您最近的记录和动态 📈
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -328,27 +379,35 @@ export default function DashboardPage() {
                   
                   if (topActivities.length === 0) {
                     return (
-                      <div className="text-center py-8 text-muted-foreground">
-                        <p>还没有活动记录</p>
-                        <p className="text-sm mt-1">开始您的第一次打卡或写日记吧！</p>
+                      <div className="text-center py-12">
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                          <span className="text-2xl">🌱</span>
+                        </div>
+                        <p className="text-muted-foreground font-medium">还没有活动记录</p>
+                        <p className="text-sm text-muted-foreground mt-2">开始您的第一次打卡或写日记吧！</p>
                       </div>
                     )
                   }
                   
-                  return topActivities.map((activity, index) => (
-                    <div key={index} className="flex items-center space-x-4">
-                      <div className={`h-2 w-2 rounded-full ${activity.color}`} />
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{activity.description}</p>
-                        <p className="text-xs text-muted-foreground">{getRelativeTime(activity.date)}</p>
-                      </div>
+                  return (
+                    <div className="space-y-4">
+                      {topActivities.map((activity, index) => (
+                        <div key={index} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-primary/5 transition-colors duration-200">
+                          <div className={`h-3 w-3 rounded-full ${activity.color} shadow-sm`} />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-foreground truncate">{activity.description}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{getRelativeTime(activity.date)}</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))
+                  )
                 })()}
               </div>
             </CardContent>
           </Card>
         </div>
+      </div>
     </DashboardLayout>
   )
 }

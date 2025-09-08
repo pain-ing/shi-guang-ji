@@ -98,16 +98,27 @@ export default function RegisterPage() {
   }
 
   return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
-            <div className="flex items-center justify-center mb-4">
-              <div className="h-8 w-8 rounded-full bg-primary" />
-              <span className="ml-2 text-xl font-bold">拾光集</span>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-cyan-50 to-primary-50 py-12 px-4 sm:px-6 lg:px-8">
+        {/* 背景装饰元素 */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -left-40 w-80 h-80 rounded-full bg-gradient-accent opacity-10 blur-3xl animate-pulse" />
+          <div className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-gradient-primary opacity-10 blur-3xl animate-pulse" />
+        </div>
+        
+        <Card className="w-full max-w-md glassmorphism card-gradient-shadow hover-lift border-0">
+          <CardHeader className="space-y-1 text-center">
+            <div className="flex items-center justify-center mb-6">
+              <div className="relative">
+                <div className="h-12 w-12 rounded-full bg-gradient-accent animate-gradient" />
+                <div className="absolute inset-0 h-12 w-12 rounded-full bg-gradient-accent opacity-75 animate-ping" />
+              </div>
+              <span className="ml-3 text-2xl font-bold text-gradient-primary">拾光集</span>
             </div>
-            <CardTitle className="text-2xl text-center">创建账户</CardTitle>
-            <CardDescription className="text-center">
-              加入拾光集，开始记录您的美好时光
+            <CardTitle className="text-3xl text-center bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
+              创建账户
+            </CardTitle>
+            <CardDescription className="text-center text-muted-foreground">
+              加入拾光集，开始记录美好时光 🌟
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -210,26 +221,37 @@ export default function RegisterPage() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-accent hover:shadow-lg hover:shadow-purple/25 transition-all duration-300 text-white font-medium py-2.5" 
+                  disabled={loading}
+                >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  注册
+                  {loading ? '注册中...' : '创建账户'}
                 </Button>
               </form>
             </Form>
-            <div className="mt-6">
+            <div className="mt-8 space-y-4">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300" />
+                  <div className="w-full border-t border-gradient" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">已有账户？</span>
+                  <span className="px-4 bg-card text-muted-foreground font-medium">已有账户？</span>
                 </div>
               </div>
-              <div className="mt-6">
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/login">立即登录</Link>
-                </Button>
-              </div>
+              <Button 
+                variant="outline" 
+                className="w-full border-gradient hover:bg-gradient-accent hover:text-white transition-all duration-300 font-medium py-2.5" 
+                asChild
+              >
+                <Link href="/login">
+                  <span className="flex items-center">
+                    立即登录
+                    <span className="ml-2">→</span>
+                  </span>
+                </Link>
+              </Button>
             </div>
           </CardContent>
         </Card>
