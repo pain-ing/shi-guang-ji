@@ -26,11 +26,13 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    console.log('Sakura: enabled =', enabled, 'density =', density, 'speed =', speed);
     if (!enabled || !containerRef.current) return;
 
     const container = containerRef.current;
     const count = Math.min(Math.max(density, 10), 150);
     const speedFactor = Math.max(0.5, Math.min(2, speed));
+    console.log('Sakura: Creating', count, 'petals');
 
     // 清空旧元素
     container.innerHTML = '';

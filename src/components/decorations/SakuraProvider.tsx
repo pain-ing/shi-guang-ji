@@ -17,6 +17,9 @@ export const SakuraProvider: React.FC = () => {
   const { decorations } = useThemeStore();
   const pathname = usePathname() || "/";
 
+  console.log('SakuraProvider: decorations =', decorations);
+  console.log('SakuraProvider: pathname =', pathname);
+
   let show = decorations.sakuraEnabled;
   if (show) {
     if (decorations.sakuraScope === 'include') {
@@ -25,6 +28,8 @@ export const SakuraProvider: React.FC = () => {
       show = !(decorations.sakuraPages || []).some(p => matchPath(pathname, p));
     }
   }
+
+  console.log('SakuraProvider: show =', show);
 
   if (!show) return null;
 
