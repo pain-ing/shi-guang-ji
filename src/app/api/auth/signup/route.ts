@@ -40,7 +40,7 @@ export async function POST(req: Request) {
 
     if (error) {
       let message = '注册失败'
-      const code = (error as any).code || error.message
+      const code = (error as { code?: string }).code || error.message
       if (code === 'user_already_exists' || /User already registered/i.test(error.message)) {
         message = '该邮箱已注册'
       } else if (/rate/i.test(error.message)) {

@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 export default function AuthDebugPage() {
   const authStore = useAuthStore()
   const router = useRouter()
-  const [sessionInfo, setSessionInfo] = useState<any>(null)
+  const [sessionInfo, setSessionInfo] = useState<{ user?: { id: string; email?: string }; expires_at?: number } | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -64,7 +64,9 @@ export default function AuthDebugPage() {
       await supabase.auth.signOut()
       
       // 清除 localStorage
-      localStorage.clear()
+      if (typeof window !== 'undefined') {
+        localStorage.clear()
+      }
       
       // 清除 cookies
       document.cookie.split(";").forEach((c) => {
@@ -140,7 +142,7 @@ export default function AuthDebugPage() {
                   <>
                     <div>user.id: {sessionInfo.user?.id}</div>
                     <div>user.email: {sessionInfo.user?.email}</div>
-                    <div>expires_at: {new Date(sessionInfo.expires_at * 1000).toLocaleString()}</div>
+                    <div>expires_at: {sessionInfo.expires_at ? new Date(sessionInfo.expires_at * 1000).toLocaleString() : 'N/A'}</div>
                   </>
                 ) : (
                   <div>无会话</div>
@@ -151,11 +153,15 @@ export default function AuthDebugPage() {
             <div className="space-y-2">
               <h3 className="font-semibold">localStorage 数据</h3>
               <div className="bg-gray-100 rounded-md p-3 text-sm font-mono max-h-40 overflow-auto">
-                {Object.keys(localStorage).map(key => (
-                  <div key={key} className="truncate">
-                    {key}: {localStorage.getItem(key)?.substring(0, 50)}...
-                  </div>
-                ))}
+                {typeof window !== 'undefined' ? (
+                  Object.keys(localStorage).map(key => (
+                    <div key={key} className="truncate">
+                      {key}: {localStorage.getItem(key)?.substring(0, 50)}...
+                    </div>
+                  ))
+                ) : (
+                  <div>服务端渲染中，localStorage 不可用</div>
+                )}
               </div>
             </div>
 
@@ -186,10 +192,10 @@ export default function AuthDebugPage() {
           <CardContent className="space-y-2 text-sm">
             <p>如果遇到无限加载问题，请尝试以下步骤：</p>
             <ol className="list-decimal list-inside space-y-1 ml-4">
-              <li>点击"清除所有会话"按钮</li>
+              <li>点击&quot;清除所有会话&quot;按钮</li>
               <li>刷新页面</li>
               <li>重新登录</li>
-              <li>如果问题依然存在，点击"紧急登录"</li>
+              <li>如果问题依然存在，点击&quot;紧急登录&quot;</li>
             </ol>
           </CardContent>
         </Card>

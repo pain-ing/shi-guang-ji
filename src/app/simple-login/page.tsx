@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -24,7 +24,7 @@ export default function SimpleLoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const { signIn, loading, user, initialized } = useAuthStore()
   const { toast } = useToast()
-  const router = useRouter()
+  // const router = useRouter()
 
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),

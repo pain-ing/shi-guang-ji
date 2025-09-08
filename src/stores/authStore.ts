@@ -225,7 +225,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         console.error('Supabase 登录错误:', {
           message: error.message,
           status: error.status,
-          code: (error as any).code,
+          code: (error as { code?: string }).code,
           details: error
         })
       } else {

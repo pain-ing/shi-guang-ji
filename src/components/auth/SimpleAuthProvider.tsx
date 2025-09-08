@@ -16,7 +16,7 @@ export function SimpleAuthProvider({ children }: SimpleAuthProviderProps) {
     initialize().catch(error => {
       console.error('SimpleAuthProvider: 初始化失败:', error)
     })
-  }, []) // 空依赖数组，只执行一次
+  }, [initialize]) // 包含 initialize 依赖
 
   // 直接渲染子组件，不等待
   return <>{children}</>

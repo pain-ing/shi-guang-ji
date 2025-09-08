@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { MediaFile } from '@/types/database'
 import { mediaUtils } from '@/stores/mediaStore'
 import { Button } from '@/components/ui/button'
@@ -121,9 +122,11 @@ export function MediaGrid({
   const renderFilePreview = (file: MediaFile) => {
     if (mediaUtils.isImage(file.mime_type)) {
       return (
-        <img
+        <Image
           src={file.file_url}
           alt={file.filename}
+          width={200}
+          height={128}
           className="w-full h-32 object-cover rounded-t-lg"
           loading="lazy"
         />
