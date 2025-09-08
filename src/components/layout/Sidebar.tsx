@@ -2,8 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { useAuthStore } from '@/stores/authStore'
+import { useCheckInStore, checkInUtils } from '@/stores/checkInStore'
+import { useDiaryStore } from '@/stores/diaryStore'
+import { useMediaStore } from '@/stores/mediaStore'
 import {
   Home,
   Calendar,
@@ -47,6 +52,24 @@ interface SidebarProps {
 
 export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname()
+  const { user } = useAuthStore()
+  const { checkIns, getCheckIns } = useCheckInStore()
+  const { diaries, getDiaries } = useDiaryStore()
+  const { mediaFiles, getMediaFiles } = useMediaStore()
+
+  // 加载数据
+  useEffect(() => {
+    if (user) {
+      getCheckIns()
+      getDiaries(1)
+      getMediaFiles(1)
+    }
+  }, [user, getCheckIns, getDiaries, getMediaFiles])
+
+  // 计算统计数据
+  const monthlyCheckIns = checkInUtils.getMonthlyCheckIns(checkIns)
+  const totalDiaries = diaries.length
+  const totalPhotos = mediaFiles.filter(file => file.file_type === 'image').length
 
   return (
     <div className={cn('pb-12 w-64', className)}>
@@ -89,15 +112,15 @@ export function Sidebar({ className }: SidebarProps) {
             <div className="space-y-2 px-4">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">本月打卡</span>
-                <span className="font-medium">15 天</span>
+                <span className="font-medium">{monthlyCheckIns} 天</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">日记数量</span>
-                <span className="font-medium">42 篇</span>
+                <span className="font-medium">{totalDiaries} 篇</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">照片数量</span>
-                <span className="font-medium">128 张</span>
+                <span className="font-medium">{totalPhotos} 张</span>
               </div>
             </div>
           </div>
