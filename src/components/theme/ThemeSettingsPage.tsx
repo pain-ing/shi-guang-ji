@@ -14,7 +14,8 @@ import {
   Leaf,
   Crown,
   Eye,
-  Trash2
+  Trash2,
+  Map
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -204,6 +205,70 @@ export const ThemeSettingsPage: React.FC = () => {
               </CardContent>
             </Card>
 
+            {/* 氛围特效：显示范围 */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Map className="w-5 h-5" />
+                  <CardTitle className="text-lg">显示范围</CardTitle>
+                </div>
+                <CardDescription>
+                  选择在哪些页面显示樱花效果
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                  <div className="space-y-2">
+                    <Label>范围模式</Label>
+                    <select
+                      className="w-full border rounded-md h-9 px-3 bg-background"
+                      value={decorations.sakuraScope}
+                      onChange={(e) => (useThemeStore.getState().setSakuraScope as any)(e.target.value as any)}
+                    >
+                      <option value="all">全部页面显示</option>
+                      <option value="include">仅以下页面显示</option>
+                      <option value="exclude">以下页面不显示</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* 常用页面选择 */}
+                <div className="space-y-3">
+                  <Label>常用页面</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {[
+                      ['/dashboard', '首页/仪表板'],
+                      ['/diary', '日记'],
+                      ['/diary/new', '写日记'],
+                      ['/diary/[id]/edit', '编辑日记'],
+                      ['/check-in', '每日打卡'],
+                      ['/stats', '统计'],
+                      ['/media', '媒体库'],
+                      ['/login', '登录'],
+                      ['/register', '注册'],
+                    ].map(([path, label]) => {
+                      const checked = (decorations.sakuraPages || []).includes(path as string)
+                      return (
+                        <label key={path} className="flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={(e) => {
+                              const { addSakuraPage, removeSakuraPage } = useThemeStore.getState() as any
+                              if (e.target.checked) addSakuraPage(path)
+                              else removeSakuraPage(path)
+                            }}
+                          />
+                          <span>{label}</span>
+                        </label>
+                      )
+                    })}
+                  </div>
+                  <p className="text-xs text-muted-foreground">当前规则：{decorations.sakuraScope === 'all' ? '全部页面显示' : decorations.sakuraScope === 'include' ? '仅列表内页面显示' : '除了列表内页面，其他页面显示'}</p>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* 氛围特效：樱花飘落 */}
             <Card>
               <CardHeader>
@@ -255,6 +320,70 @@ export const ThemeSettingsPage: React.FC = () => {
                     step={0.1}
                     value={decorations.sakuraSpeed}
                     onChange={(e) => setSakuraSpeed(Number(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 彩蛋效果 */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  <CardTitle className="text-lg">彩蛋效果</CardTitle>
+                </div>
+                <CardDescription>
+                  让界面更灵动的蝴蝶与星光（可与樱花叠加）
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="butterflies">蝴蝶飞舞</Label>
+                  <Switch
+                    id="butterflies"
+                    checked={decorations.surprises?.butterfliesEnabled || false}
+                    onCheckedChange={(v) => (useThemeStore.getState().setButterfliesEnabled as any)(v)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="butterfly-count">蝴蝶数量</Label>
+                    <span className="text-xs text-muted-foreground">{decorations.surprises?.butterfliesCount ?? 2}</span>
+                  </div>
+                  <input
+                    id="butterfly-count"
+                    type="range"
+                    min={1}
+                    max={10}
+                    step={1}
+                    value={decorations.surprises?.butterfliesCount ?? 2}
+                    onChange={(e) => (useThemeStore.getState().setButterfliesCount as any)(Number(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t">
+                  <Label htmlFor="starlight">星光闪烁</Label>
+                  <Switch
+                    id="starlight"
+                    checked={decorations.surprises?.starlightEnabled || false}
+                    onCheckedChange={(v) => (useThemeStore.getState().setStarlightEnabled as any)(v)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="starlight-density">星光密度</Label>
+                    <span className="text-xs text-muted-foreground">{decorations.surprises?.starlightDensity ?? 20}</span>
+                  </div>
+                  <input
+                    id="starlight-density"
+                    type="range"
+                    min={10}
+                    max={100}
+                    step={1}
+                    value={decorations.surprises?.starlightDensity ?? 20}
+                    onChange={(e) => (useThemeStore.getState().setStarlightDensity as any)(Number(e.target.value))}
                     className="w-full"
                   />
                 </div>

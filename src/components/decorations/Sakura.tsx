@@ -7,6 +7,10 @@ interface SakuraProps {
   density?: number; // 10 - 150
   zIndex?: number;
   speed?: number; // 0.5 - 2.0 倍速
+  butterfliesEnabled?: boolean;
+  butterfliesCount?: number; // 1-10
+  starlightEnabled?: boolean;
+  starlightDensity?: number; // 10-100
 }
 
 // 渐变色组：粉 -> 樱粉 -> 紫粉
@@ -18,7 +22,7 @@ const gradients = [
   ['hsl(300 90% 90%)', 'hsl(280 90% 85%)'],
 ];
 
-export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zIndex = 10, speed = 1 }) => {
+export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zIndex = 10, speed = 1, butterfliesEnabled = false, butterfliesCount = 2, starlightEnabled = false, starlightDensity = 20 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,6 +60,37 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
     };
 
     for (let i = 0; i < count; i++) createPetal(i);
+
+    // 蝴蝶彩蛋
+    if (butterfliesEnabled) {
+      const c = Math.max(1, Math.min(10, butterfliesCount));
+      for (let i = 0; i < c; i++) {
+        const b = document.createElement('div');
+        b.className = 'butterfly';
+        const top = Math.random() * 60 + 10; // vh
+        const duration = 20 + Math.random() * 20;
+        const delay = Math.random() * 10;
+        b.style.top = `${top}vh`;
+        b.style.animationDuration = `${duration}s`;
+        b.style.animationDelay = `${delay}s`;
+        b.style.left = `${-10 - Math.random() * 20}vw`;
+        container.appendChild(b);
+      }
+    }
+
+    // 星光彩蛋
+    if (starlightEnabled) {
+      const d = Math.max(10, Math.min(100, starlightDensity));
+      for (let i = 0; i < d; i++) {
+        const s = document.createElement('div');
+        s.className = 'twinkle-star';
+        s.style.left = `${Math.random() * 100}vw`;
+        s.style.top = `${Math.random() * 100}vh`;
+        s.style.animationDelay = `${Math.random() * 5}s`;
+        s.style.animationDuration = `${2 + Math.random() * 3}s`;
+        container.appendChild(s);
+      }
+    }
 
     return () => {
       container.innerHTML = '';

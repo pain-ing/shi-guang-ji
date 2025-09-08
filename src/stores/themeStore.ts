@@ -27,10 +27,26 @@ interface ThemeState {
     sakuraEnabled: boolean;
     sakuraDensity: number; // 10-150
     sakuraSpeed: number;   // 0.5 - 2.0
+    sakuraScope: 'all' | 'include' | 'exclude';
+    sakuraPages: string[]; // 路由前缀列表
+    surprises: {
+      butterfliesEnabled: boolean;
+      butterfliesCount: number; // 1-10
+      starlightEnabled: boolean;
+      starlightDensity: number; // 10-100
+    };
   };
   setSakuraEnabled: (enabled: boolean) => void;
   setSakuraDensity: (density: number) => void;
   setSakuraSpeed: (speed: number) => void;
+  setSakuraScope: (scope: 'all' | 'include' | 'exclude') => void;
+  addSakuraPage: (prefix: string) => void;
+  removeSakuraPage: (prefix: string) => void;
+  setSakuraPages: (pages: string[]) => void;
+  setButterfliesEnabled: (enabled: boolean) => void;
+  setButterfliesCount: (count: number) => void;
+  setStarlightEnabled: (enabled: boolean) => void;
+  setStarlightDensity: (density: number) => void;
   
   // 操作方法
   setTheme: (themeId: string) => void;
@@ -64,6 +80,14 @@ export const useThemeStore = create<ThemeState>()(
         sakuraEnabled: true,
         sakuraDensity: 40,
         sakuraSpeed: 1,
+        sakuraScope: 'all',
+        sakuraPages: ['/dashboard', '/login', '/register'],
+        surprises: {
+          butterfliesEnabled: false,
+          butterfliesCount: 2,
+          starlightEnabled: false,
+          starlightDensity: 20,
+        }
       },
 
       setSakuraEnabled: (enabled: boolean) => {
@@ -76,6 +100,42 @@ export const useThemeStore = create<ThemeState>()(
       setSakuraSpeed: (speed: number) => {
         const s = Math.max(0.5, Math.min(2, speed));
         set(state => ({ decorations: { ...state.decorations, sakuraSpeed: s } }));
+      },
+      setSakuraScope: (scope: 'all' | 'include' | 'exclude') => {
+        set(state => ({ decorations: { ...state.decorations, sakuraScope: scope } }));
+      },
+      addSakuraPage: (prefix: string) => {
+        set(state => ({
+          decorations: {
+            ...state.decorations,
+            sakuraPages: Array.from(new Set([...(state.decorations.sakuraPages || []), prefix]))
+          }
+        }));
+      },
+      removeSakuraPage: (prefix: string) => {
+        set(state => ({
+          decorations: {
+            ...state.decorations,
+            sakuraPages: (state.decorations.sakuraPages || []).filter(p => p !== prefix)
+          }
+        }));
+      },
+      setSakuraPages: (pages: string[]) => {
+        set(state => ({ decorations: { ...state.decorations, sakuraPages: pages } }));
+      },
+      setButterfliesEnabled: (enabled: boolean) => {
+        set(state => ({ decorations: { ...state.decorations, surprises: { ...state.decorations.surprises, butterfliesEnabled: enabled } } }));
+      },
+      setButterfliesCount: (count: number) => {
+        const c = Math.max(1, Math.min(10, Math.round(count)));
+        set(state => ({ decorations: { ...state.decorations, surprises: { ...state.decorations.surprises, butterfliesCount: c } } }));
+      },
+      setStarlightEnabled: (enabled: boolean) => {
+        set(state => ({ decorations: { ...state.decorations, surprises: { ...state.decorations.surprises, starlightEnabled: enabled } } }));
+      },
+      setStarlightDensity: (density: number) => {
+        const d = Math.max(10, Math.min(100, Math.round(density)));
+        set(state => ({ decorations: { ...state.decorations, surprises: { ...state.decorations.surprises, starlightDensity: d } } }));
       },
 
       setTheme: (themeId: string) => {
