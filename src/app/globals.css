@@ -182,15 +182,42 @@
     pointer-events: none;
   }
 
-  /* 内层花瓣负责摆动和旋转 */
+  /* 内层花瓣负责摆动和旋转（改为多边形剪裁，边缘更利落） */
   .sakura-petal {
     position: relative;
-    border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
-    opacity: 0.9;
-    filter: drop-shadow(0 2px 6px hsl(330 40% 50% / 0.4));
+    /* 使用清晰的花瓣轮廓，避免“糊成一坨”的圆角块状感 */
+    border-radius: 0;
+    /* 樱花花瓣轮廓（顶部凹口 + 两侧鼓起 + 尖底） */
+    clip-path: polygon(
+      42% 4%, 46% 1%, 50% 5%, 54% 1%, 58% 4%,
+      70% 14%, 82% 30%, 88% 46%, 80% 66%, 64% 84%,
+      50% 100%,
+      36% 84%, 20% 66%, 12% 46%, 18% 30%, 30% 14%
+    );
+    opacity: 0.95;
+    /* 细边勾线让轮廓更分明 */
+    outline: 1px solid hsl(330 45% 75% / 0.45);
+    filter: drop-shadow(0 2px 6px hsl(330 40% 50% / 0.35));
     animation: sakura-sway ease-in-out infinite;
     transform: rotate(var(--rotate, 0deg));
     will-change: transform;
+    pointer-events: none;
+  }
+
+  /* 花瓣轻微的中轴高光，提升立体感且不显糊 */
+  .sakura-petal::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 26%;
+    width: 1px;
+    height: 44%;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      to bottom,
+      hsla(330, 60%, 92%, 0.7),
+      hsla(330, 60%, 92%, 0)
+    );
     pointer-events: none;
   }
 
@@ -219,14 +246,37 @@
   /* 蝴蝶动画 */
   .butterfly {
     position: absolute;
-    width: 14px;
-    height: 10px;
-    background:
-      radial-gradient(circle at 30% 50%, hsl(300 80% 85%), transparent 60%),
-      radial-gradient(circle at 70% 50%, hsl(280 80% 80%), transparent 60%);
-    border-radius: 50% 50% 40% 40%;
+    width: 2px;           /* 身体宽度 */
+    height: 12px;         /* 身体长度 */
+    background: hsl(280 25% 35%);
+    border-radius: 1px;
     filter: drop-shadow(0 2px 4px hsl(280 40% 50% / 0.35));
-    animation: butterfly-fly linear infinite, butterfly-flap 0.6s ease-in-out infinite alternate;
+    animation: butterfly-fly linear infinite; /* 仅负责位移轨迹 */
+  }
+  .butterfly::before,
+  .butterfly::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    width: 12px;
+    height: 14px;
+    background: radial-gradient(60% 50% at 60% 50%, hsl(300 80% 90%), hsl(280 70% 78%));
+    clip-path: polygon(
+      0% 50%, 10% 30%, 28% 14%, 48% 8%, 68% 14%, 85% 30%, 95% 50%,
+      85% 70%, 68% 86%, 48% 92%, 28% 86%, 10% 70%
+    );
+    opacity: 0.95;
+    pointer-events: none;
+  }
+  .butterfly::before {
+    right: 1px;              /* 右翼 */
+    transform-origin: right 50%;
+    animation: butterfly-wing 0.6s ease-in-out infinite;
+  }
+  .butterfly::after {
+    left: 1px;               /* 左翼 */
+    transform-origin: left 50%;
+    animation: butterfly-wing 0.6s ease-in-out infinite reverse;
   }
   @keyframes butterfly-fly {
     0% { transform: translateX(0) translateY(0) rotate(0deg); }
@@ -235,9 +285,9 @@
     75% { transform: translateX(90vw) translateY(-8vh) rotate(8deg); }
     100% { transform: translateX(120vw) translateY(0) rotate(0deg); }
   }
-  @keyframes butterfly-flap {
-    0% { transform: scaleX(1); }
-    100% { transform: scaleX(0.7); }
+  @keyframes butterfly-wing {
+    0%   { transform: rotate(12deg); }
+    100% { transform: rotate(-24deg); }
   }
 
   /* 星光闪烁 */
