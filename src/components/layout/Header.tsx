@@ -22,7 +22,8 @@ import {
   BookOpen,
   Camera,
   Calendar,
-  Database
+  Database,
+  BarChart3
 } from 'lucide-react'
 
 export function Header() {
@@ -94,6 +95,13 @@ export function Header() {
           >
             <Camera className="h-4 w-4" />
             <span>媒体</span>
+          </Link>
+          <Link
+            href="/stats"
+            className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center space-x-1"
+          >
+            <BarChart3 className="h-4 w-4" />
+            <span>统计</span>
           </Link>
         </nav>
 
