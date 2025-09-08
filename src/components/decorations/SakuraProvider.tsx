@@ -14,14 +14,26 @@ const matchPath = (path: string, prefix: string) => {
 };
 
 export const SakuraProvider: React.FC = () => {
+  const [mounted, setMounted] = React.useState(false);
   const { decorations } = useThemeStore();
   const pathname = usePathname() || "/";
+
+  React.useEffect(() => {
+    setMounted(true);
+    console.log('SakuraProvider: mounted, decorations =', decorations);
+  }, [decorations]);
+
+  // 避免服务端渲染问题
+  if (!mounted) {
+    console.log('SakuraProvider: not mounted yet');
+    return null;
+  }
 
   console.log('SakuraProvider: decorations =', decorations);
   console.log('SakuraProvider: pathname =', pathname);
 
-  let show = decorations.sakuraEnabled;
-  if (show) {
+  let show = decorations?.sakuraEnabled ?? true;
+  if (show && decorations) {
     if (decorations.sakuraScope === 'include') {
       show = (decorations.sakuraPages || []).some(p => matchPath(pathname, p));
     } else if (decorations.sakuraScope === 'exclude') {
@@ -33,13 +45,13 @@ export const SakuraProvider: React.FC = () => {
 
   if (!show) return null;
 
-  const { butterfliesEnabled, butterfliesCount, starlightEnabled, starlightDensity } = decorations.surprises || {} as any;
+  const { butterfliesEnabled, butterfliesCount, starlightEnabled, starlightDensity } = decorations?.surprises || {} as any;
 
   return (
     <Sakura
       enabled={show}
-      density={decorations.sakuraDensity}
-      speed={decorations.sakuraSpeed}
+      density={decorations?.sakuraDensity ?? 40}
+      speed={decorations?.sakuraSpeed ?? 1}
       butterfliesEnabled={!!butterfliesEnabled}
       butterfliesCount={butterfliesCount ?? 2}
       starlightEnabled={!!starlightEnabled}
