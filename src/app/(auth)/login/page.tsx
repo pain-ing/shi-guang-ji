@@ -83,23 +83,66 @@ function LoginInner() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-purple-50 to-cyan-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div 
+      className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+      style={{
+        background: 'linear-gradient(135deg, hsl(210, 40%, 98%) 0%, hsl(249, 95%, 95%) 50%, hsl(279, 95%, 95%) 100%)'
+      }}
+    >
       {/* 背景装饰元素 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-primary opacity-10 blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-secondary opacity-10 blur-3xl animate-pulse" />
+        <div 
+          className="absolute -top-40 -right-40 w-80 h-80 rounded-full opacity-10 blur-3xl animate-pulse" 
+          style={{
+            background: 'linear-gradient(135deg, hsl(249, 95%, 63%), hsl(279, 95%, 75%))'
+          }}
+        />
+        <div 
+          className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full opacity-10 blur-3xl animate-pulse" 
+          style={{
+            background: 'linear-gradient(135deg, hsl(279, 95%, 75%), hsl(249, 95%, 63%))'
+          }}
+        />
       </div>
       
         <Card className="w-full max-w-md glassmorphism card-gradient-shadow hover-lift border-0">
           <CardHeader className="space-y-1 text-center">
             <div className="flex items-center justify-center mb-6">
               <div className="relative">
-                <div className="h-12 w-12 rounded-full bg-gradient-primary animate-gradient" />
-                <div className="absolute inset-0 h-12 w-12 rounded-full bg-gradient-primary opacity-75 animate-ping" />
+                <div 
+                  className="h-12 w-12 rounded-full animate-gradient" 
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(249, 95%, 63%), hsl(279, 95%, 75%))'
+                  }}
+                />
+                <div 
+                  className="absolute inset-0 h-12 w-12 rounded-full opacity-75 animate-ping" 
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(249, 95%, 63%), hsl(279, 95%, 75%))'
+                  }}
+                />
               </div>
-              <span className="ml-3 text-2xl font-bold text-gradient-primary">拾光集</span>
+              <span 
+                className="ml-3 text-2xl font-bold"
+                style={{
+                  background: 'linear-gradient(135deg, hsl(249, 95%, 63%), hsl(279, 95%, 75%))',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
+              >
+                拾光集
+              </span>
             </div>
-            <CardTitle className="text-3xl text-center bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
+            <CardTitle 
+              className="text-3xl text-center"
+              style={{
+                background: 'linear-gradient(135deg, hsl(249, 95%, 63%), hsl(279, 95%, 75%))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
+            >
               欢迎回来
             </CardTitle>
             <CardDescription className="text-center text-muted-foreground">
@@ -168,7 +211,11 @@ function LoginInner() {
                 </div>
                 <Button 
                   type="submit" 
-                  className="w-full bg-gradient-primary hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 text-white font-medium py-2.5" 
+                  className="w-full hover:shadow-lg transition-all duration-300 text-white font-medium py-2.5" 
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(249, 95%, 63%), hsl(279, 95%, 75%))',
+                    borderColor: 'hsl(249, 95%, 63%)'
+                  }}
                   disabled={loading}
                 >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -187,7 +234,10 @@ function LoginInner() {
               </div>
               <Button 
                 variant="outline" 
-                className="w-full border-gradient hover:bg-gradient-primary hover:text-white transition-all duration-300 font-medium py-2.5" 
+                className="w-full transition-all duration-300 font-medium py-2.5" 
+                style={{
+                  borderColor: 'hsl(249, 95%, 63%)'
+                }}
                 asChild
               >
                 <Link href="/register">
