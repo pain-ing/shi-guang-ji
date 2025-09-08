@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { GlobalSearch } from '@/components/search/GlobalSearch'
 import { 
   User, 
   Settings, 
@@ -97,8 +98,12 @@ export function Header() {
 
         {/* Right side */}
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <div className="w-full flex-1 md:w-auto md:flex-none">
-            {/* Search can be added here later */}
+          <div className="w-full flex-1 md:w-auto md:flex-none max-w-sm">
+            <GlobalSearch 
+              className="hidden md:block"
+              placeholder="搜索内容..."
+              showFilters={false}
+            />
           </div>
           
           {/* User menu */}
