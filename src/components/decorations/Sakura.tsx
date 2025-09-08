@@ -46,10 +46,10 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       wrap.className = 'sakura-petal-wrap';
 
       const startLeft = Math.random() * 100; // vw
-      const size = 25 + Math.random() * 15; // 25-40px
-      const duration = (3 + Math.random() * 2) / speedFactor; // 3-5秒
-      const delay = Math.random() * 1; // 最多1秒
-      const sway = 30 + Math.random() * 30; // px
+      const size = 12 + Math.random() * 8; // 12-20px（更精致）
+      const duration = (8 + Math.random() * 6) / speedFactor; // 8-14秒（更柔和）
+      const delay = Math.random() * 2.5; // 最多2.5秒，避免集中生成
+      const sway = 18 + Math.random() * 18; // 18-36px（更自然）
       const rotate = Math.random() * 360;
       const g = gradients[i % gradients.length];
 
@@ -66,9 +66,9 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       petal.style.animationDelay = `${delay}s`;
       petal.style.setProperty('--sway', `${sway}px`);
       petal.style.setProperty('--rotate', `${rotate}deg`);
-      // 使用青色系列供测试
-      petal.style.background = '#00bcd4'; // Cyan
-      petal.style.opacity = '1';
+      // 柔和粉色渐变
+      petal.style.background = `linear-gradient(135deg, ${g[0]}, ${g[1]})`;
+      petal.style.opacity = '0.65';
       petal.style.pointerEvents = 'none';
 
       // 添加调试信息
