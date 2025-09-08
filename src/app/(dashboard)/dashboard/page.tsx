@@ -1,51 +1,108 @@
 'use client'
 
 import { useAuthStore } from '@/stores/authStore'
+import { useCheckInStore, checkInUtils } from '@/stores/checkInStore'
+import { useDiaryStore } from '@/stores/diaryStore'
+import { useMediaStore } from '@/stores/mediaStore'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Calendar, BookOpen, Camera, Heart, TrendingUp } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function DashboardPage() {
   const { user, profile, initialized } = useAuthStore()
+  const { checkIns, getCheckIns } = useCheckInStore()
+  const { diaries, getDiaries } = useDiaryStore()
+  const { mediaFiles, getMediaFiles } = useMediaStore()
   const router = useRouter()
 
-  const stats = [
-    {
-      title: '本月打卡',
-      value: '15',
-      description: '连续打卡 3 天',
-      icon: Calendar,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-    },
-    {
-      title: '日记数量',
-      value: '42',
-      description: '本月新增 8 篇',
-      icon: BookOpen,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50',
-    },
-    {
-      title: '照片数量',
-      value: '128',
-      description: '本月新增 23 张',
-      icon: Camera,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
-    },
-    {
-      title: '心情指数',
-      value: '85%',
-      description: '比上月提升 12%',
-      icon: Heart,
-      color: 'text-pink-600',
-      bgColor: 'bg-pink-50',
-    },
-  ]
+  // 计算统计数据
+  const stats = useMemo(() => {
+    // 本月打卡天数
+    const monthlyCheckIns = checkInUtils.getMonthlyCheckIns(checkIns)
+    // 连续打卡天数
+    const streakDays = checkInUtils.getStreakDays(checkIns)
+    
+    // 日记总数
+    const totalDiaries = diaries.length
+    // 本月新增日记数量
+    const currentDate = new Date()
+    const currentYear = currentDate.getFullYear()
+    const currentMonth = currentDate.getMonth() + 1
+    const monthlyDiaries = diaries.filter(diary => {
+      const diaryDate = new Date(diary.created_at)
+      return diaryDate.getFullYear() === currentYear && 
+             diaryDate.getMonth() + 1 === currentMonth
+    }).length
+    
+    // 照片总数
+    const totalPhotos = mediaFiles.filter(file => file.file_type === 'image').length
+    // 本月新增照片数量
+    const monthlyPhotos = mediaFiles.filter(file => {
+      const fileDate = new Date(file.created_at)
+      return file.file_type === 'image' &&
+             fileDate.getFullYear() === currentYear && 
+             fileDate.getMonth() + 1 === currentMonth
+    }).length
+    
+    // 计算心情指数 (基于最近打卡的积极情绪比例)
+    const recentCheckIns = checkIns.slice(0, 30) // 最近30次打卡
+    const positiveModesCount = recentCheckIns.filter(checkIn => 
+      ['happy', 'excited', 'calm', 'grateful'].includes(checkIn.mood)
+    ).length
+    const moodIndex = recentCheckIns.length > 0 
+      ? Math.round((positiveModesCount / recentCheckIns.length) * 100)
+      : 0
+    
+    return [
+      {
+        title: '本月打卡',
+        value: monthlyCheckIns.toString(),
+        description: streakDays > 0 ? `连续打卡 ${streakDays} 天` : '开始您的打卡之旅',
+        icon: Calendar,
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-50',
+      },
+      {
+        title: '日记数量',
+        value: totalDiaries.toString(),
+        description: monthlyDiaries > 0 ? `本月新增 ${monthlyDiaries} 篇` : '还没有日记',
+        icon: BookOpen,
+        color: 'text-green-600',
+        bgColor: 'bg-green-50',
+      },
+      {
+        title: '照片数量',
+        value: totalPhotos.toString(),
+        description: monthlyPhotos > 0 ? `本月新增 ${monthlyPhotos} 张` : '还没有照片',
+        icon: Camera,
+        color: 'text-purple-600',
+        bgColor: 'bg-purple-50',
+      },
+      {
+        title: '心情指数',
+        value: `${moodIndex}%`,
+        description: moodIndex > 0 ? '基于最近的心情记录' : '暂无心情数据',
+        icon: Heart,
+        color: 'text-pink-600',
+        bgColor: 'bg-pink-50',
+      },
+    ]
+  }, [checkIns, diaries, mediaFiles])
+
+  // 加载数据
+  useEffect(() => {
+    if (user) {
+      // 加载打卡数据
+      getCheckIns()
+      // 加载日记数据 (第1页)
+      getDiaries(1)
+      // 加载媒体文件数据 (第1页)
+      getMediaFiles(1)
+    }
+  }, [user, getCheckIns, getDiaries, getMediaFiles])
 
   // 等待认证初始化
   useEffect(() => {
@@ -176,27 +233,87 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <div className="h-2 w-2 rounded-full bg-blue-500" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">完成了今日打卡</p>
-                    <p className="text-xs text-muted-foreground">2小时前</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="h-2 w-2 rounded-full bg-green-500" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">发布了新日记《美好的一天》</p>
-                    <p className="text-xs text-muted-foreground">昨天</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="h-2 w-2 rounded-full bg-purple-500" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">上传了 5 张新照片</p>
-                    <p className="text-xs text-muted-foreground">2天前</p>
-                  </div>
-                </div>
+                {/* 显示最近的活动 */}
+                {(() => {
+                  interface Activity {
+                    type: string
+                    date: Date
+                    description: string
+                    color: string
+                  }
+                  
+                  const activities: Activity[] = []
+                  
+                  // 添加最近的打卡记录
+                  const recentCheckIns = checkIns.slice(0, 3)
+                  recentCheckIns.forEach(checkIn => {
+                    activities.push({
+                      type: 'checkin',
+                      date: new Date(checkIn.created_at),
+                      description: `完成了每日打卡`,
+                      color: 'bg-blue-500'
+                    })
+                  })
+                  
+                  // 添加最近的日记
+                  const recentDiaries = diaries.slice(0, 3)
+                  recentDiaries.forEach(diary => {
+                    activities.push({
+                      type: 'diary',
+                      date: new Date(diary.created_at),
+                      description: `发布了新日记《${diary.title || '无标题'}》`,
+                      color: 'bg-green-500'
+                    })
+                  })
+                  
+                  // 添加最近的照片
+                  const recentPhotos = mediaFiles
+                    .filter(file => file.file_type === 'image')
+                    .slice(0, 3)
+                  recentPhotos.forEach(photo => {
+                    activities.push({
+                      type: 'photo',
+                      date: new Date(photo.created_at),
+                      description: `上传了新照片`,
+                      color: 'bg-purple-500'
+                    })
+                  })
+                  
+                  // 按日期排序并取前5条
+                  activities.sort((a, b) => b.date.getTime() - a.date.getTime())
+                  const topActivities = activities.slice(0, 5)
+                  
+                  // 格式化相对时间
+                  const getRelativeTime = (date: Date) => {
+                    const now = new Date()
+                    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+                    
+                    if (diffInSeconds < 60) return '刚才'
+                    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}分钟前`
+                    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}小时前`
+                    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}天前`
+                    return date.toLocaleDateString('zh-CN')
+                  }
+                  
+                  if (topActivities.length === 0) {
+                    return (
+                      <div className="text-center py-8 text-muted-foreground">
+                        <p>还没有活动记录</p>
+                        <p className="text-sm mt-1">开始您的第一次打卡或写日记吧！</p>
+                      </div>
+                    )
+                  }
+                  
+                  return topActivities.map((activity, index) => (
+                    <div key={index} className="flex items-center space-x-4">
+                      <div className={`h-2 w-2 rounded-full ${activity.color}`} />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{activity.description}</p>
+                        <p className="text-xs text-muted-foreground">{getRelativeTime(activity.date)}</p>
+                      </div>
+                    </div>
+                  ))
+                })()}
               </div>
             </CardContent>
           </Card>
