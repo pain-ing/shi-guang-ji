@@ -45,7 +45,7 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       petal.className = 'sakura-petal';
 
       const startLeft = Math.random() * 100; // vw
-      const size = 15 + Math.random() * 10; // 增大尺寸便于观察
+      const size = 25 + Math.random() * 15; // 进一步增大尺寸: 25-40px
       const duration = (3 + Math.random() * 2) / speedFactor; // 大幅加快: 3-5秒
       const delay = Math.random() * 1; // 减少延迟到最多1秒
       const sway = 30 + Math.random() * 30; // px
@@ -59,8 +59,8 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       petal.style.animationDelay = `${delay}s`;
       petal.style.setProperty('--sway', `${sway}px`);
       petal.style.setProperty('--rotate', `${rotate}deg`);
-      // 使用非常明显的颜色供测试
-      petal.style.background = i < 5 ? '#ff0080' : `linear-gradient(135deg, ${g[0]}, ${g[1]})`;
+      // 使用青色系列供测试
+      petal.style.background = '#00bcd4'; // 青色 (Cyan)
       petal.style.zIndex = '9999';
       petal.style.position = 'absolute';
       petal.style.opacity = '1';
