@@ -439,8 +439,9 @@ export const getTheme = (themeId: string): Theme => {
   return themes.find(theme => theme.id === themeId) || themes[0];
 };
 
-// 应用主题到 CSS 变量
+// 应用主题到 DOM
 export const applyTheme = (theme: Theme) => {
+  console.log('applyTheme called with:', theme.id, theme.displayName);
   const root = document.documentElement;
   
   // 应用颜色变量
@@ -448,12 +449,14 @@ export const applyTheme = (theme: Theme) => {
     if (key === 'moods') {
       // 处理心情颜色
       Object.entries(value as Record<string, string>).forEach(([moodKey, moodValue]) => {
-        root.style.setProperty(`--mood-${moodKey}`, `hsl(${moodValue})`);
+        root.style.setProperty(`--mood-${moodKey}`, moodValue);
+        console.log(`Setting --mood-${moodKey}:`, moodValue);
       });
-    } else {
+    } else if (typeof value === 'string') {
       // 转换驼峰命名为 kebab-case
       const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-      root.style.setProperty(`--${cssKey}`, `hsl(${value})`);
+      root.style.setProperty(`--${cssKey}`, value);
+      console.log(`Setting --${cssKey}:`, value);
     }
   });
   

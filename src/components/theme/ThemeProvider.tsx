@@ -13,6 +13,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   useEffect(() => {
     // 初始化主题
+    console.log('ThemeProvider: Initializing theme...');
     initializeTheme();
 
     // 确保所有元素都有主题过渡效果
@@ -35,6 +36,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   useEffect(() => {
     if (currentTheme && typeof window !== 'undefined') {
       // 在主题变化时重新应用
+      console.log('ThemeProvider: Applying theme:', currentTheme.id, currentTheme.displayName);
       applyTheme(currentTheme);
     }
   }, [currentTheme]);
