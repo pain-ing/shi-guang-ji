@@ -21,7 +21,8 @@ import {
   Menu,
   BookOpen,
   Camera,
-  Calendar
+  Calendar,
+  Database
 } from 'lucide-react'
 
 export function Header() {
@@ -138,6 +139,12 @@ export function Header() {
                   <Link href="/profile" className="flex items-center">
                     <User className="mr-2 h-4 w-4" />
                     <span>个人资料</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/data" className="flex items-center">
+                    <Database className="mr-2 h-4 w-4" />
+                    <span>数据管理</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
