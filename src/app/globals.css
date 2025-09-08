@@ -176,10 +176,12 @@
     position: absolute;
     top: -10vh;
     border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
-    opacity: 0.8;
-    filter: drop-shadow(0 2px 4px hsl(330 40% 70% / 0.25));
+    opacity: 0.9;
+    filter: drop-shadow(0 2px 6px hsl(330 40% 50% / 0.4));
     animation: sakura-fall linear infinite, sakura-sway ease-in-out infinite;
     transform: rotate(var(--rotate, 0deg));
+    z-index: 9999;
+    will-change: transform;
   }
 
   @keyframes sakura-fall {

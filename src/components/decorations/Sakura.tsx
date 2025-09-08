@@ -45,9 +45,9 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       petal.className = 'sakura-petal';
 
       const startLeft = Math.random() * 100; // vw
-      const size = 8 + Math.random() * 10; // px
-      const duration = (10 + Math.random() * 14) / speedFactor; // s, 受速度影响
-      const delay = Math.random() * 10; // s
+      const size = 15 + Math.random() * 10; // 增大尺寸便于观察
+      const duration = (8 + Math.random() * 6) / speedFactor; // 加快速度
+      const delay = Math.random() * 3; // 减少延迟
       const sway = 30 + Math.random() * 30; // px
       const rotate = Math.random() * 360;
       const g = gradients[i % gradients.length];
@@ -60,6 +60,11 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       petal.style.setProperty('--sway', `${sway}px`);
       petal.style.setProperty('--rotate', `${rotate}deg`);
       petal.style.background = `linear-gradient(135deg, ${g[0]}, ${g[1]})`;
+      petal.style.zIndex = '9999';
+      petal.style.position = 'absolute';
+      
+      // 添加调试信息
+      console.log(`Created petal ${i}: left=${startLeft}vw, size=${size}px, duration=${duration}s`);
 
       container.appendChild(petal);
     };
@@ -109,10 +114,13 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       ref={containerRef}
       style={{
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         pointerEvents: 'none',
         overflow: 'hidden',
-        zIndex,
+        zIndex: 9999, // 确保樱花在最顶层
       }}
     />
   );
