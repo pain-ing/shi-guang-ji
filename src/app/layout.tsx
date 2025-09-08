@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { SimpleAuthProvider } from "@/components/auth/SimpleAuthProvider"
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({
@@ -79,10 +80,12 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body className={`${inter.variable} font-sans antialiased`}>
         <ErrorBoundary>
-          <SimpleAuthProvider>
-            {children}
-          </SimpleAuthProvider>
-          <Toaster />
+          <ThemeProvider>
+            <SimpleAuthProvider>
+              {children}
+            </SimpleAuthProvider>
+            <Toaster />
+          </ThemeProvider>
         </ErrorBoundary>
       </body>
     </html>

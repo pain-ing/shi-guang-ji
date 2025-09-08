@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { GlobalSearch } from '@/components/search/GlobalSearch'
+import { ThemeSwitcher } from '@/components/theme/ThemeSwitcher'
 import { 
   User, 
   Settings, 
@@ -23,7 +24,8 @@ import {
   Camera,
   Calendar,
   Database,
-  BarChart3
+  BarChart3,
+  Palette
 } from 'lucide-react'
 
 export function Header() {
@@ -103,6 +105,13 @@ export function Header() {
             <BarChart3 className="h-4 w-4" />
             <span>统计</span>
           </Link>
+          <Link
+            href="/themes"
+            className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center space-x-1"
+          >
+            <Palette className="h-4 w-4" />
+            <span>主题</span>
+          </Link>
         </nav>
 
         {/* Right side */}
@@ -113,6 +122,11 @@ export function Header() {
               placeholder="搜索内容..."
               showFilters={false}
             />
+          </div>
+          
+          {/* Theme switcher */}
+          <div className="hidden md:block">
+            <ThemeSwitcher variant="icon" />
           </div>
           
           {/* User menu */}
@@ -153,6 +167,12 @@ export function Header() {
                   <Link href="/data" className="flex items-center">
                     <Database className="mr-2 h-4 w-4" />
                     <span>数据管理</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/themes" className="flex items-center">
+                    <Palette className="mr-2 h-4 w-4" />
+                    <span>主题设置</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
