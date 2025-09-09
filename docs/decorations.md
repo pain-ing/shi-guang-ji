@@ -1,35 +1,49 @@
 # Decorations 指南（Sakura / Butterflies / Starlight）
 
-本文档简述装饰系统的参数、默认值、性能建议与无障碍策略。
+本文档简述装饰系统的参数、默认值、性能建议与无障碍策略，并给出统一管理器的使用方式。
 
-## 参数与默认值
+## 参数与默认值（表格）
 - Sakura（樱花）
-  - enabled: boolean (default: true)
-  - density: number 10–150 (default: 40 at Provider，组件默认 30)
-  - speed: number 0.5–2.0 (default: 1)
+  - enabled: boolean（默认 true）
+  - density: 10–150（默认 Provider 40，组件默认 30）
+  - speed: 0.5–2.0（默认 1）
 - Butterflies（蝴蝶）
-  - butterfliesEnabled: boolean (default: false)
-  - butterfliesCount: number 1–10 (default: 2)
+  - butterfliesEnabled: boolean（默认 false）
+  - butterfliesCount: 1–10（默认 2）
 - Starlight（星光）
-  - starlightEnabled: boolean (default: false)
-  - starlightDensity: number 10–100 (default: 20)
+  - starlightEnabled: boolean（默认 false）
+  - starlightDensity: 10–100（默认 20）
 
 ## 无障碍与自适应
-- 当系统设置为“减少动态”（prefers-reduced-motion: reduce）时：
-  - CSS 层面强制关闭动画
-  - 运行时不创建节点（密度与数量置 0）
-- 设备能力自适应：依据 deviceMemory 与触控特征（pointer: coarse）缩放密度与元素尺寸，确保流畅
+- 系统减少动态（prefers-reduced-motion: reduce）：
+  - CSS 层面关闭动画；运行时不创建节点（密度=0）
+- 设备能力自适应：依据 deviceMemory 与触控特征（pointer: coarse）缩放密度与尺寸
 
 ## 性能建议
-- 尽量使用 transform 动画，避免 layout/paint 级别的高成本操作
-- 控制滤镜数量与强度；移动端可降低或禁用 drop-shadow/filter
-- 避免无谓创建与销毁 DOM，使用 init/destroy 生命周期管理
+- 优先使用 transform；限制昂贵滤镜
+- 按需加载与懒挂载；避免无谓的 DOM 创建/销毁
 
 ## 结构与可维护性
-- useSakuraDOM Hook 封装了 DOM 生成与清理逻辑；Sakura 组件本身只负责容器与参数传递
-- Decoration 类型位于 src/components/decorations/types.ts，便于后续扩展其他装饰实现
+- useSakuraDOM：封装 DOM 生成与清理
+- mountSakura：提供纯函数挂载能力，便于复用
+- 统一管理器：useDecorationManager + DecorationsHost + createSakuraInitializer
 
-## 路由范围控制（Provider）
+### 统一管理器用法
+示例：在某页面/布局中组合多个装饰（未来可扩展）
+
+```tsx
+import { DecorationsHost } from '@/components/decorations/DecorationsHost'
+import { createSakuraInitializer } from '@/components/decorations/createSakuraInitializer'
+
+export default function Page() {
+  const inits = [
+    createSakuraInitializer({ enabled: true, density: 40, speed: 1, butterfliesEnabled: true, butterfliesCount: 2, starlightEnabled: false })
+  ]
+  return <DecorationsHost initializers={inits} />
+}
+```
+
+## 路由范围控制（SakuraProvider）
 - sakuraScope: 'all' | 'include' | 'exclude'
 - sakuraPages: string[]（前缀匹配）
 - 规则：
