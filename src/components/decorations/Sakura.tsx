@@ -33,9 +33,25 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
     }
 
     const container = containerRef.current;
-    const count = Math.min(Math.max(density, 10), 150);
-    const speedFactor = Math.max(0.5, Math.min(2, speed));
-    console.log('Sakura: Creating', count, 'petals');
+
+    // 性能与无障碍自适应（prefers-reduced-motion、deviceMemory、触控设备）
+    const prefersReducedMotion = typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isCoarse = typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(pointer: coarse)').matches;
+    const deviceMemory = (navigator as any)?.deviceMemory as number | undefined;
+
+    let perfMul = 1; // 密度缩放
+    if (deviceMemory && deviceMemory <= 2) perfMul = Math.min(perfMul, 0.4);
+    else if (deviceMemory && deviceMemory <= 4) perfMul = Math.min(perfMul, 0.6);
+    if (isCoarse) perfMul = Math.min(perfMul, 0.6);
+
+    const baseCount = Math.min(Math.max(density, 10), 150);
+    const count = prefersReducedMotion ? 0 : Math.round(baseCount * perfMul);
+    const speedFactor = Math.max(0.5, Math.min(2, speed)) * (prefersReducedMotion ? 0.8 : 1);
+    console.log('Sakura: Creating', count, 'petals (prefersReducedMotion=', prefersReducedMotion, ', perfMul=', perfMul, ')');
 
     // 清空旧元素
     container.innerHTML = '';
@@ -46,7 +62,7 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       wrap.className = 'sakura-petal-wrap';
 
       const startLeft = Math.random() * 100; // vw
-      const size = 12 + Math.random() * 8; // 12-20px（更精致）
+      const size = (perfMul < 0.7 ? 10 + Math.random() * 6 : 12 + Math.random() * 8); // 自适应尺寸
       const duration = (8 + Math.random() * 6) / speedFactor; // 8-14秒（更柔和）
       const delay = Math.random() * 2.5; // 最多2.5秒，避免集中生成
       const sway = 18 + Math.random() * 18; // 18-36px（更自然）
@@ -80,10 +96,11 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
 
     for (let i = 0; i < count; i++) createPetal(i);
 
-    // 蝴蝶彩蛋
-    if (butterfliesEnabled) {
-      const c = Math.max(1, Math.min(10, butterfliesCount));
-      for (let i = 0; i < c; i++) {
+    // 蝴蝶彩蛋（自适应密度 & 减少动态）
+    const bCountInit = Math.max(1, Math.min(10, butterfliesCount || 0));
+    const bCount = (!butterfliesEnabled || prefersReducedMotion) ? 0 : Math.max(0, Math.round(bCountInit * perfMul));
+    if (bCount > 0) {
+      for (let i = 0; i < bCount; i++) {
         const b = document.createElement('div');
         b.className = 'butterfly';
         const top = Math.random() * 60 + 10; // vh
@@ -97,10 +114,11 @@ export const Sakura: React.FC<SakuraProps> = ({ enabled = true, density = 30, zI
       }
     }
 
-    // 星光彩蛋
-    if (starlightEnabled) {
-      const d = Math.max(10, Math.min(100, starlightDensity));
-      for (let i = 0; i < d; i++) {
+    // 星光彩蛋（自适应密度 & 减少动态）
+    const sInit = Math.max(10, Math.min(100, starlightDensity || 0));
+    const sCount = (!starlightEnabled || prefersReducedMotion) ? 0 : Math.max(0, Math.round(sInit * perfMul));
+    if (sCount > 0) {
+      for (let i = 0; i < sCount; i++) {
         const s = document.createElement('div');
         s.className = 'twinkle-star';
         s.style.left = `${Math.random() * 100}vw`;

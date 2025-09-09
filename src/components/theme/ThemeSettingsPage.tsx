@@ -52,6 +52,14 @@ export const ThemeSettingsPage: React.FC = () => {
     setSakuraEnabled,
     setSakuraDensity,
     setSakuraSpeed,
+    setSakuraScope,
+    addSakuraPage,
+    removeSakuraPage,
+    setSakuraPages,
+    setButterfliesEnabled,
+    setButterfliesCount,
+    setStarlightEnabled,
+    setStarlightDensity,
   } = useThemeStore();
 
   const [previewMode, setPreviewMode] = useState(false);
@@ -223,7 +231,7 @@ export const ThemeSettingsPage: React.FC = () => {
                     <select
                       className="w-full border rounded-md h-9 px-3 bg-background"
                       value={decorations.sakuraScope}
-                      onChange={(e) => (useThemeStore.getState().setSakuraScope as any)(e.target.value as any)}
+                      onChange={(e) => setSakuraScope(e.target.value as 'all' | 'include' | 'exclude')}
                     >
                       <option value="all">全部页面显示</option>
                       <option value="include">仅以下页面显示</option>
@@ -254,7 +262,6 @@ export const ThemeSettingsPage: React.FC = () => {
                             type="checkbox"
                             checked={checked}
                             onChange={(e) => {
-                              const { addSakuraPage, removeSakuraPage } = useThemeStore.getState() as any
                               if (e.target.checked) addSakuraPage(path)
                               else removeSakuraPage(path)
                             }}
@@ -343,7 +350,7 @@ export const ThemeSettingsPage: React.FC = () => {
                   <Switch
                     id="butterflies"
                     checked={decorations.surprises?.butterfliesEnabled || false}
-                    onCheckedChange={(v) => (useThemeStore.getState().setButterfliesEnabled as any)(v)}
+                    onCheckedChange={(v) => setButterfliesEnabled(v)}
                   />
                 </div>
                 <div className="space-y-2">
@@ -358,7 +365,7 @@ export const ThemeSettingsPage: React.FC = () => {
                     max={10}
                     step={1}
                     value={decorations.surprises?.butterfliesCount ?? 2}
-                    onChange={(e) => (useThemeStore.getState().setButterfliesCount as any)(Number(e.target.value))}
+                    onChange={(e) => setButterfliesCount(Number(e.target.value))}
                     className="w-full"
                   />
                 </div>
@@ -368,7 +375,7 @@ export const ThemeSettingsPage: React.FC = () => {
                   <Switch
                     id="starlight"
                     checked={decorations.surprises?.starlightEnabled || false}
-                    onCheckedChange={(v) => (useThemeStore.getState().setStarlightEnabled as any)(v)}
+                    onCheckedChange={(v) => setStarlightEnabled(v)}
                   />
                 </div>
                 <div className="space-y-2">
@@ -383,7 +390,7 @@ export const ThemeSettingsPage: React.FC = () => {
                     max={100}
                     step={1}
                     value={decorations.surprises?.starlightDensity ?? 20}
-                    onChange={(e) => (useThemeStore.getState().setStarlightDensity as any)(Number(e.target.value))}
+                    onChange={(e) => setStarlightDensity(Number(e.target.value))}
                     className="w-full"
                   />
                 </div>

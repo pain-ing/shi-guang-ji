@@ -7,45 +7,45 @@
     /* 默认主题 - 青紫渐变色系 */
     --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
-    
+
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
-    
+
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    
+
     --primary: 249 95% 63%;
     --primary-foreground: 210 40% 98%;
-    
+
     --secondary: 210 40% 96%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-    
+
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    
+
     --accent: 279 95% 75%;
     --accent-foreground: 222.2 84% 4.9%;
-    
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    
+
     --success: 142.1 76.2% 36.3%;
     --success-foreground: 355.7 100% 97.3%;
-    
+
     --warning: 32.5 94.6% 43.7%;
     --warning-foreground: 355.7 100% 97.3%;
-    
+
     --info: 249 95% 63%;
     --info-foreground: 210 40% 98%;
-    
+
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 249 95% 63%;
-    
+
     /* 渐变色变量 */
     --gradient-from: 249 95% 63%;
     --gradient-to: 279 95% 75%;
-    
+
     /* 心情颜色变量 */
     --mood-happy: 45 93% 47%;
     --mood-excited: 12 76% 61%;
@@ -55,19 +55,19 @@
     --mood-sad: 221 39% 11%;
     --mood-angry: 0 84% 60%;
     --mood-worried: 25 95% 53%;
-    
+
     /* 图表色彩 */
     --chart-1: 221 83% 53%;
     --chart-2: 262 83% 58%;
     --chart-3: 142 71% 45%;
     --chart-4: 25 95% 53%;
     --chart-5: 280 100% 70%;
-    
+
     /* 字体变量 */
     --font-sans: "Inter", "Noto Sans SC", system-ui, sans-serif;
     --font-serif: "Noto Serif SC", "Times New Roman", serif;
     --font-mono: "JetBrains Mono", "SF Mono", monospace;
-    
+
     --radius: 0.5rem;
   }
 }
@@ -97,15 +97,15 @@
   .bg-gradient-primary {
     background: linear-gradient(135deg, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
   }
-  
+
   .bg-gradient-secondary {
     background: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--accent)));
   }
-  
+
   .bg-gradient-mood {
     background: linear-gradient(135deg, hsl(var(--mood-happy)), hsl(var(--mood-peaceful)));
   }
-  
+
   /* 文字渐变 */
   .text-gradient-primary {
     background: linear-gradient(135deg, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
@@ -113,14 +113,14 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   /* 渐变边框 */
   .border-gradient {
     position: relative;
     background: hsl(var(--background));
     border-radius: var(--radius);
   }
-  
+
   .border-gradient::before {
     content: '';
     position: absolute;
@@ -133,25 +133,25 @@
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
   }
-  
+
   /* 美化卡片阴影 */
   .card-gradient-shadow {
     box-shadow: 0 10px 40px -10px hsl(var(--primary) / 0.2);
     transition: box-shadow 0.3s ease;
   }
-  
+
   /* 玻璃态效果 */
   .glassmorphism {
     background: hsl(var(--background) / 0.8);
     backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid hsl(var(--border) / 0.5);
   }
-  
+
   /* 主题切换动画 */
   .theme-transition {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   /* 心情颜色工具类 */
   .text-mood-happy { color: hsl(var(--mood-happy)); }
   .text-mood-excited { color: hsl(var(--mood-excited)); }
@@ -161,7 +161,7 @@
   .text-mood-sad { color: hsl(var(--mood-sad)); }
   .text-mood-angry { color: hsl(var(--mood-angry)); }
   .text-mood-worried { color: hsl(var(--mood-worried)); }
-  
+
   .bg-mood-happy { background-color: hsl(var(--mood-happy)); }
   .bg-mood-excited { background-color: hsl(var(--mood-excited)); }
   .bg-mood-peaceful { background-color: hsl(var(--mood-peaceful)); }
@@ -170,7 +170,7 @@
   .bg-mood-sad { background-color: hsl(var(--mood-sad)); }
   .bg-mood-angry { background-color: hsl(var(--mood-angry)); }
   .bg-mood-worried { background-color: hsl(var(--mood-worried)); }
-  
+
   /* 樱花动画 */
   /* 外层包裹元素负责下落，避免 transform 冲突 */
   .sakura-petal-wrap {
@@ -236,7 +236,7 @@
     background-size: 200% 200%;
     animation: gradient 3s ease infinite;
   }
-  
+
   @keyframes gradient {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -304,17 +304,30 @@
     0%, 100% { opacity: 0; transform: scale(0.5); }
     50% { opacity: 1; transform: scale(1); }
   }
-  
+
+  /* 系统“减少动态”支持：在用户偏好下禁用动画以避免干扰与节能 */
+  @media (prefers-reduced-motion: reduce) {
+    .sakura-petal-wrap,
+    .sakura-petal,
+    .butterfly,
+    .butterfly::before,
+    .butterfly::after,
+    .twinkle-star {
+      animation: none !important;
+    }
+  }
+
+
   /* 悬停效果 */
   .hover-lift {
     transition: all 0.3s ease;
   }
-  
+
   .hover-lift:hover {
     transform: translateY(-2px);
     box-shadow: 0 15px 50px -10px hsl(var(--primary) / 0.3);
   }
-  
+
   /* 按钮渐变样式 */
   .btn-gradient {
     background: linear-gradient(135deg, hsl(var(--gradient-from)), hsl(var(--gradient-to)));
@@ -323,7 +336,7 @@
     position: relative;
     overflow: hidden;
   }
-  
+
   .btn-gradient::before {
     content: '';
     position: absolute;
@@ -334,11 +347,11 @@
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.5s;
   }
-  
+
   .btn-gradient:hover::before {
     left: 100%;
   }
-  
+
   /* 状态颜色 */
   .text-success { color: hsl(var(--success)); }
   .text-warning { color: hsl(var(--warning)); }
