@@ -5,7 +5,7 @@ import { SimpleAuthProvider } from "@/components/auth/SimpleAuthProvider"
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
-import { SakuraProvider } from "@/components/decorations/SakuraProvider";
+import { DecorationsProvider } from "@/components/decorations/DecorationsProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -84,8 +84,8 @@ export default function RootLayout({
           <ThemeProvider>
             <SimpleAuthProvider>
               <div className="app-gradient-bg min-h-screen relative">
-                {/* 樱花飘落效果（可在主题设置中开关与调节） */}
-                <SakuraProvider />
+                {/* 氛围装饰效果（统一管理，可在主题设置中开关与调节） */}
+                <DecorationsProvider />
                 {children}
               </div>
             </SimpleAuthProvider>

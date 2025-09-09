@@ -14,25 +14,18 @@ const matchPath = (path: string, prefix: string) => {
   }
 };
 
-export const SakuraProvider: React.FC = () => {
+export const DecorationsProvider: React.FC = () => {
   const [mounted, setMounted] = React.useState(false);
   const { decorations } = useThemeStore();
   const pathname = usePathname() || "/";
 
   React.useEffect(() => {
     setMounted(true);
-    console.log('SakuraProvider: mounted, decorations =', decorations);
-  }, [decorations]);
+  }, []);
 
-  // 避免服务端渲染问题
-  if (!mounted) {
-    console.log('SakuraProvider: not mounted yet');
-    return null;
-  }
+  if (!mounted) return null;
 
-  console.log('SakuraProvider: decorations =', decorations);
-  console.log('SakuraProvider: pathname =', pathname);
-
+  // 基于 sakuraScope 的路由范围控制（目前作为全局装饰开关范围）
   let show = decorations?.sakuraEnabled ?? true;
   if (show && decorations) {
     if (decorations.sakuraScope === 'include') {
@@ -41,27 +34,25 @@ export const SakuraProvider: React.FC = () => {
       show = !(decorations.sakuraPages || []).some(p => matchPath(pathname, p));
     }
   }
-
-  console.log('SakuraProvider: show =', show);
-
   if (!show) return null;
 
   const { butterfliesEnabled, butterfliesCount, starlightEnabled, starlightDensity } = decorations?.surprises || {} as any;
 
-  const inits = [
-    createSakuraInitializer({
-      enabled: true,
-      density: decorations?.sakuraDensity ?? 40,
-      speed: decorations?.sakuraSpeed ?? 1,
-      butterfliesEnabled: !!butterfliesEnabled,
-      butterfliesCount: butterfliesCount ?? 2,
-      starlightEnabled: !!starlightEnabled,
-      starlightDensity: starlightDensity ?? 20,
-    })
-  ];
+  const inits = [] as Array<(container: HTMLElement) => void | (() => void)>;
 
-  return (
-    <DecorationsHost initializers={inits} zIndex={9999} />
-  );
+  // Sakura 初始器（目前承载蝴蝶与星光子配置）
+  inits.push(createSakuraInitializer({
+    enabled: true,
+    density: decorations?.sakuraDensity ?? 40,
+    speed: decorations?.sakuraSpeed ?? 1,
+    butterfliesEnabled: !!butterfliesEnabled,
+    butterfliesCount: butterfliesCount ?? 2,
+    starlightEnabled: !!starlightEnabled,
+    starlightDensity: starlightDensity ?? 20,
+  }));
+
+  // 未来：可根据 store 配置再 push 其他装饰的 initializer
+
+  return <DecorationsHost initializers={inits} zIndex={9999} />
 };
 
