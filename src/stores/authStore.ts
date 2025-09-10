@@ -40,7 +40,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     try {
       set({ loading: true })
 
-      console.log('开始初始化认证状态')
 
       // 获取当前会话
       const { data: { session }, error } = await supabase.auth.getSession()
@@ -50,7 +49,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         return
       }
 
-      console.log('会话状态:', session ? '已登录' : '未登录')
 
       if (session) {
         set({
@@ -66,7 +64,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
       // 监听认证状态变化
       supabase.auth.onAuthStateChange(async (event, session) => {
-        console.log('认证状态变化:', event, session?.user?.email)
 
         set({
           user: session?.user ?? null,
@@ -83,7 +80,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         }
       })
 
-      console.log('认证初始化完成')
 
     } catch (error) {
       console.error('初始化认证失败:', error)
@@ -98,7 +94,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     if (!user) return
 
     try {
-      console.log('开始获取用户资料:', user.id)
 
       const { data, error } = await supabase
         .from('profiles')
@@ -115,7 +110,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
         // 如果用户资料不存在，创建一个默认的
         if (error.code === 'PGRST116') {
-          console.log('用户资料不存在，创建默认资料')
           try {
             const { data: newProfile, error: createError } = await supabase
               .from('profiles')
@@ -160,7 +154,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         return
       }
 
-      console.log('获取用户资料成功:', data)
       set({ profile: data })
     } catch (error) {
       console.error('获取用户资料异常:', error)
@@ -229,12 +222,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
           details: error
         })
       } else {
-        console.log('登录成功:', {
-          userId: data?.user?.id,
-          email: data?.user?.email,
-          emailConfirmed: data?.user?.email_confirmed_at,
-          userConfirmed: data?.user?.confirmed_at
-        })
       }
 
       // 3) 审计上报（不影响主流程返回）

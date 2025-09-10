@@ -14,9 +14,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     // 只在未初始化时执行
     if (!initialized) {
-      console.log('AuthProvider: 开始初始化认证状态')
       initialize().then(() => {
-        console.log('AuthProvider: 认证状态初始化完成')
       }).catch(error => {
         console.error('AuthProvider: 认证初始化失败:', error)
       })

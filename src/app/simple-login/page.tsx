@@ -37,13 +37,11 @@ export default function SimpleLoginPage() {
   // 如果用户已登录，直接重定向
   useEffect(() => {
     if (initialized && user) {
-      console.log('SimpleLogin: 用户已登录，重定向到 dashboard')
       window.location.href = '/dashboard'
     }
   }, [initialized, user])
 
   const onSubmit = async (values: LoginForm) => {
-    console.log('SimpleLogin: 开始登录', values.email)
     
     const { error } = await signIn(values.email, values.password)
     
@@ -55,7 +53,6 @@ export default function SimpleLoginPage() {
         description: error.message || '登录时发生错误，请重试',
       })
     } else {
-      console.log('SimpleLogin: 登录成功，准备跳转')
       toast({
         title: '登录成功',
         description: '欢迎回到拾光集！',

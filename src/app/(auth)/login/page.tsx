@@ -33,7 +33,6 @@ function LoginInner() {
   // 如果用户已登录，直接重定向
   useEffect(() => {
     if (initialized && user) {
-      console.log('用户已登录，重定向到:', redirectTo)
       router.replace(redirectTo)
     }
   }, [initialized, user, redirectTo, router])
@@ -62,7 +61,6 @@ function LoginInner() {
         description: '欢迎回到拾光集！',
       })
       // 登录成功后重定向
-      console.log('登录成功，重定向到:', redirectTo)
       router.replace(redirectTo)
     }
   }

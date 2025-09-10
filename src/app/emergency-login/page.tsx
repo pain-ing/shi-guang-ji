@@ -23,7 +23,6 @@ export default function EmergencyLoginPage() {
     setMessage('')
 
     try {
-      console.log('Emergency Login: 开始登录', email)
       
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -34,7 +33,6 @@ export default function EmergencyLoginPage() {
         console.error('Emergency Login: 登录失败', error)
         setError(`登录失败: ${error.message}`)
       } else {
-        console.log('Emergency Login: 登录成功', data)
         setMessage('登录成功！正在跳转...')
         
         // 等待一秒后强制跳转
@@ -53,7 +51,6 @@ export default function EmergencyLoginPage() {
   const checkAuthStatus = async () => {
     try {
       const { data: { session }, error } = await supabase.auth.getSession()
-      console.log('Emergency Login: 当前会话状态', { session, error })
       
       if (session) {
         setMessage(`当前已登录: ${session.user.email}`)

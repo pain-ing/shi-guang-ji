@@ -20,20 +20,9 @@ export function AuthGuard({
   const router = useRouter()
   const [isRedirecting, setIsRedirecting] = useState(false)
 
-  // 调试日志
-  console.log('AuthGuard 状态:', {
-    requireAuth,
-    user: user ? '已登录' : '未登录',
-    loading,
-    initialized,
-    redirectTo,
-    isRedirecting,
-    pathname: typeof window !== 'undefined' ? window.location.pathname : 'server'
-  })
 
   useEffect(() => {
     if (!initialized || loading) {
-      console.log('AuthGuard: 等待初始化或加载中')
       return
     }
 
@@ -42,7 +31,6 @@ export function AuthGuard({
 
     // 需要认证但用户未登录
     if (requireAuth && !user) {
-      console.log('AuthGuard: 需要认证但用户未登录，重定向到', redirectTo)
       setIsRedirecting(true)
       const redirectUrl = currentPath !== '/' ? `${redirectTo}?redirectTo=${encodeURIComponent(currentPath)}` : redirectTo
       router.replace(redirectUrl)
@@ -51,14 +39,12 @@ export function AuthGuard({
 
     // 不需要认证但用户已登录，且在认证页面（登录/注册页面）
     if (!requireAuth && user && (currentPath.startsWith('/login') || currentPath.startsWith('/register'))) {
-      console.log('AuthGuard: 不需要认证但用户已登录，重定向到 dashboard')
       setIsRedirecting(true)
       router.replace('/dashboard')
       return
     }
 
     // 其他情况不需要重定向
-    console.log('AuthGuard: 认证状态正确，显示内容')
     setIsRedirecting(false)
   }, [user, loading, initialized, requireAuth, redirectTo, router])
 
@@ -67,20 +53,16 @@ export function AuthGuard({
   // 2. 需要认证但用户未登录（即将重定向）
   // 3. 正在重定向
   if (!initialized || loading) {
-    console.log('AuthGuard: 显示加载页面 - initialized:', initialized, 'loading:', loading)
     return <LoadingPage />
   }
 
   if (requireAuth && !user) {
-    console.log('AuthGuard: 需要认证但用户未登录，显示加载页面')
     return <LoadingPage />
   }
 
   if (isRedirecting) {
-    console.log('AuthGuard: 正在重定向，显示加载页面')
     return <LoadingPage />
   }
 
-  console.log('AuthGuard: 渲染子组件')
   return <>{children}</>
 }

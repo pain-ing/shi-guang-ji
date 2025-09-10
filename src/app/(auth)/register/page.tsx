@@ -40,7 +40,6 @@ export default function RegisterPage() {
   // 如果用户已登录，直接重定向
   useEffect(() => {
     if (initialized && user) {
-      console.log('用户已登录，重定向到 dashboard')
       router.replace('/dashboard')
     }
   }, [initialized, user, router])
