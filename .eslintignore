@@ -1,0 +1,12 @@
+node_modules
+.next
+dist
+coverage
+
+# Ignore unit tests during Next.js production build lint phase on Vercel
+src/**/*.test.ts
+src/**/*.test.tsx
+src/**/*.spec.ts
+src/**/*.spec.tsx
+tests/**
+
