@@ -4,16 +4,19 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { Sakura } from './Sakura'
 
 function mockMatchMedia(map: Record<string, boolean>) {
-  // @ts-expect-error jsdom mock window.matchMedia
-  global.window.matchMedia = (query: string) => ({
-    matches: !!map[query],
-    media: query,
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
+  // Mock window.matchMedia for jsdom
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: !!map[query],
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }))
   })
 }
 
@@ -21,8 +24,11 @@ describe('useSakuraDOM hook via Sakura component', () => {
   beforeEach(() => {
     cleanup()
     mockMatchMedia({})
-    // @ts-expect-error jsdom mock navigator.deviceMemory
-    (navigator as any).deviceMemory = undefined
+    // Mock navigator.deviceMemory for jsdom
+    Object.defineProperty(navigator, 'deviceMemory', {
+      writable: true,
+      value: undefined
+    })
   })
 
   it('creates expected number of petals for given density', () => {

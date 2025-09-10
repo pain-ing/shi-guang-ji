@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen, cleanup } from '@testing-library/react'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 
 // ---- dynamic mocks helpers ----
 let currentPath = '/'
