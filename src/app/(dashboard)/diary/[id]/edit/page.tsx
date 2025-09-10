@@ -14,7 +14,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { MarkdownEditor } from '@/components/diary/MarkdownEditor'
+import dynamic from 'next/dynamic'
+
+// 动态导入Markdown编辑器，减少首屏加载
+const MarkdownEditor = dynamic(
+  () => import('@/components/diary/MarkdownEditor').then(mod => mod.MarkdownEditor),
+  { 
+    loading: () => <div className="h-96 bg-muted animate-pulse rounded" />,
+    ssr: false 
+  }
+)
 import { useToast } from '@/hooks/use-toast'
 import { ArrowLeft, Save, Loader2 } from 'lucide-react'
 

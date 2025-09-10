@@ -9,6 +9,24 @@ const SESSION_STARTED_COOKIE = 'session_started_at'
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
+  
+  // 添加安全头
+  res.headers.set('X-Frame-Options', 'DENY')
+  res.headers.set('X-Content-Type-Options', 'nosniff')
+  res.headers.set('X-XSS-Protection', '1; mode=block')
+  res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  
+  // 添加CSP头（根据需要调整）
+  res.headers.set(
+    'Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: blob: https://*.supabase.co; " +
+    "font-src 'self' data:; " +
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co; " +
+    "frame-ancestors 'none';"
+  )
 
   const supabase = createMiddlewareClient({ req, res })
 
