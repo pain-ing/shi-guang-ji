@@ -164,7 +164,7 @@ export function FileUpload({
   }
 
   const getFileIcon = (file: File) => {
-    if (file.type.startsWith('image/')) return <Image className="h-4 w-4" alt="" />
+    if (file.type.startsWith('image/')) return <Image className="h-4 w-4" />
     if (file.type.startsWith('video/')) return <Video className="h-4 w-4" />
     if (file.type.startsWith('audio/')) return <Music className="h-4 w-4" />
     return <File className="h-4 w-4" />
