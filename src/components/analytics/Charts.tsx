@@ -17,7 +17,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ReferenceLine
 } from 'recharts'
 import { TrendData, MoodStats, ActivityData } from '@/lib/analytics'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'

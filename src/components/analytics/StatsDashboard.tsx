@@ -1,9 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { 
   Select, 
@@ -12,7 +10,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAnalyticsStore, analyticsUtils } from '@/stores/analyticsStore'
 import { useDiaryStore } from '@/stores/diaryStore'
 import { useCheckInStore } from '@/stores/checkInStore'
@@ -24,7 +22,6 @@ import {
   WeeklyBarChart, 
   MoodPieChart, 
   ActivityHeatmap,
-  MiniChart,
   ProgressRing
 } from './Charts'
 import { 
@@ -37,14 +34,9 @@ import {
   BarChart3,
   Calendar,
   TrendingUp,
-  Users,
   BookOpen,
   PenTool,
-  Target,
   Trophy,
-  RefreshCw,
-  Filter,
-  Eye,
   Award,
   Flame
 } from 'lucide-react'

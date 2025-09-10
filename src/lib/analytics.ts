@@ -196,7 +196,7 @@ export function calculateStreaks(data: AnalyticsData): { currentStreak: number; 
   
   // 计算当前连续天数
   if (uniqueDates.includes(today) || uniqueDates.includes(yesterday)) {
-    let checkDate = uniqueDates.includes(today) ? new Date() : subDays(new Date(), 1)
+    const checkDate = uniqueDates.includes(today) ? new Date() : subDays(new Date(), 1)
     currentStreak = 1
     
     for (let i = 1; i <= 365; i++) { // 最多检查一年
