@@ -19,7 +19,12 @@ export function useDecorationManager(ref: React.RefObject<HTMLDivElement>, initi
     }
     return () => {
       for (const c of cleanups.reverse()) {
-        try { typeof c === 'function' && c() } catch {}
+        try {
+          if (typeof c === 'function') {
+            c()
+          }
+        } catch {}
+
       }
       // 最后清空容器，防御性处理
       el.innerHTML = ''
