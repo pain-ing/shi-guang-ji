@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { SimpleAuthProvider } from "@/components/auth/SimpleAuthProvider"
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "拾光集 - 个人生活记录",
   description: "记录生活中的美好瞬间，珍藏个人时光",
   manifest: "/manifest.json",
-  themeColor: "#6d49ff",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -54,13 +54,6 @@ export const metadata: Metadata = {
       alt: "拾光集应用图标",
     },
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    viewportFit: "cover",
-  },
   icons: {
     icon: [
       { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
@@ -70,6 +63,15 @@ export const metadata: Metadata = {
       { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
     ],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#6d49ff",
 };
 
 export default function RootLayout({

@@ -66,9 +66,12 @@ export default function RegisterPage() {
     } else {
       toast({
         title: '注册成功',
-        description: '账户创建成功，现在可以直接登录了！',
+        description: '账户创建成功，现在可以直接登录了！无需邮箱验证。',
       })
-      router.push('/login')
+      // 稍微延迟跳转，让用户看到成功消息
+      setTimeout(() => {
+        router.push('/login')
+      }, 1500)
     }
   }
 
