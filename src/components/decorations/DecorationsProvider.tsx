@@ -5,6 +5,7 @@ import { useThemeStore } from "@/stores/themeStore";
 import { usePathname } from "next/navigation";
 import { DecorationsHost } from "@/components/decorations/DecorationsHost";
 import { createSakuraInitializer } from "@/components/decorations/createSakuraInitializer";
+import { createStarlightInitializer } from "@/components/decorations/createStarlightInitializer";
 
 const matchPath = (path: string, prefix: string) => {
   try {
@@ -36,22 +37,30 @@ export const DecorationsProvider: React.FC = () => {
   }
   if (!show) return null;
 
-  const { butterfliesEnabled, butterfliesCount, starlightEnabled, starlightDensity } = decorations?.surprises || {} as any;
+  const { butterfliesEnabled, butterfliesCount, starlightEnabled, starlightDensity } = decorations?.surprises || ({} as any);
 
   const inits = [] as Array<(container: HTMLElement) => void | (() => void)>;
 
-  // Sakura 初始器（目前承载蝴蝶与星光子配置）
-  inits.push(createSakuraInitializer({
-    enabled: true,
-    density: decorations?.sakuraDensity ?? 40,
-    speed: decorations?.sakuraSpeed ?? 1,
-    butterfliesEnabled: !!butterfliesEnabled,
-    butterfliesCount: butterfliesCount ?? 2,
-    starlightEnabled: !!starlightEnabled,
-    starlightDensity: starlightDensity ?? 20,
-  }));
+  // Sakura 初始器（仅负责樱花与蝴蝶）
+  inits.push(
+    createSakuraInitializer({
+      enabled: true,
+      density: decorations?.sakuraDensity ?? 40,
+      speed: decorations?.sakuraSpeed ?? 1,
+      butterfliesEnabled: !!butterfliesEnabled,
+      butterfliesCount: butterfliesCount ?? 2,
+    })
+  );
 
-  // 未来：可根据 store 配置再 push 其他装饰的 initializer
+  // Starlight 独立初始器
+  if (starlightEnabled) {
+    inits.push(
+      createStarlightInitializer({
+        enabled: !!starlightEnabled,
+        density: starlightDensity ?? 20,
+      })
+    );
+  }
 
   return <DecorationsHost initializers={inits} zIndex={9999} />
 };

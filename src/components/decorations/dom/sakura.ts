@@ -7,13 +7,16 @@ export function mountSakura(container: HTMLElement, cfg: SakuraConfig): () => vo
     speed = 1,
     butterfliesEnabled = false,
     butterfliesCount = 2,
-    starlightEnabled = false,
-    starlightDensity = 20,
   } = cfg
 
+  // 为樱花创建独立层，避免互相清空容器影响其他装饰
+  const layer = document.createElement('div')
+  layer.className = 'sakura-layer'
+
   if (!enabled) {
-    container.innerHTML = ''
-    return () => { container.innerHTML = '' }
+    // 未启用则确保清理自身图层
+    if (layer.parentElement) layer.remove()
+    return () => { if (layer.parentElement) layer.remove() }
   }
 
   // 渐变色组：粉 -> 樱粉 -> 紫粉
@@ -41,9 +44,6 @@ export function mountSakura(container: HTMLElement, cfg: SakuraConfig): () => vo
   const baseCount = Math.min(Math.max(density, 10), 150)
   const count = prefersReducedMotion ? 0 : Math.round(baseCount * perfMul)
   const speedFactor = Math.max(0.5, Math.min(2, speed)) * (prefersReducedMotion ? 0.8 : 1)
-
-  // 清空旧元素
-  container.innerHTML = ''
 
   const createPetal = (i: number) => {
     const wrap = document.createElement('div')
@@ -74,7 +74,7 @@ export function mountSakura(container: HTMLElement, cfg: SakuraConfig): () => vo
     petal.style.pointerEvents = 'none'
 
     wrap.appendChild(petal)
-    container.appendChild(wrap)
+    layer.appendChild(wrap)
   }
 
   for (let i = 0; i < count; i++) createPetal(i)
@@ -92,24 +92,13 @@ export function mountSakura(container: HTMLElement, cfg: SakuraConfig): () => vo
       b.style.animationDuration = `${duration}s`
       b.style.animationDelay = `${delay}s`
       b.style.left = `${-10 - Math.random() * 20}vw`
-      container.appendChild(b)
+      layer.appendChild(b)
     }
   }
 
-  const sInit = Math.max(10, Math.min(100, starlightDensity || 0))
-  const sCount = (!starlightEnabled || prefersReducedMotion) ? 0 : Math.max(0, Math.round(sInit * perfMul))
-  if (sCount > 0) {
-    for (let i = 0; i < sCount; i++) {
-      const s = document.createElement('div')
-      s.className = 'twinkle-star'
-      s.style.left = `${Math.random() * 100}vw`
-      s.style.top = `${Math.random() * 100}vh`
-      s.style.animationDelay = `${Math.random() * 5}s`
-      s.style.animationDuration = `${2 + Math.random() * 3}s`
-      container.appendChild(s)
-    }
-  }
+  // 挂载到容器
+  container.appendChild(layer)
 
-  return () => { container.innerHTML = '' }
+  return () => { if (layer.parentElement) layer.remove() }
 }
 

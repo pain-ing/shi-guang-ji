@@ -11,6 +11,6 @@ export function useSakuraDOM(
     if (!el) return
     const cleanup = mountSakura(el, cfg)
     return () => cleanup && cleanup()
-  }, [container, cfg?.enabled, cfg?.density, cfg?.speed, cfg?.butterfliesEnabled, cfg?.butterfliesCount, cfg?.starlightEnabled, cfg?.starlightDensity])
+  }, [container, cfg?.enabled, cfg?.density, cfg?.speed, cfg?.butterfliesEnabled, cfg?.butterfliesCount])
 }
 

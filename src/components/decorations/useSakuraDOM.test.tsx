@@ -49,12 +49,11 @@ describe('useSakuraDOM hook via Sakura component', () => {
     expect(container.querySelectorAll('.twinkle-star').length).toBe(0)
   })
 
-  it('creates butterflies and starlight when enabled with counts', () => {
+  it('creates butterflies when enabled with a specified count', () => {
     const { container } = render(
-      <Sakura enabled density={10} speed={1} butterfliesEnabled butterfliesCount={3} starlightEnabled starlightDensity={15} />
+      <Sakura enabled density={10} speed={1} butterfliesEnabled butterfliesCount={3} />
     )
     expect(container.querySelectorAll('.butterfly').length).toBe(3)
-    expect(container.querySelectorAll('.twinkle-star').length).toBe(15)
   })
 
   it('cleans up DOM when disabled', () => {
