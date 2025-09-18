@@ -289,7 +289,10 @@ export function withPerformanceMonitoring<P extends object>(
     const monitor = PerformanceMonitor.getInstance();
     const name = componentName || Component.displayName || Component.name || 'Unknown';
 
-    return monitor.measureComponentRender(name, () => React.createElement(Component, props));
+    return monitor.measureComponentRender(name, () => {
+      const React = require('react');
+      return React.createElement(Component, props);
+    });
   };
   
   WrappedComponent.displayName = `withPerformanceMonitoring(${Component.displayName || Component.name})`;

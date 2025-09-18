@@ -66,8 +66,10 @@ export const DashboardInsights = memo<DashboardInsightsProps>(({ data }) => {
     });
 
     // 时间偏好洞察
-    const preferredTime = data.timeDistribution.reduce((max, item) => 
-      item.count > (max?.count || 0) ? item : max, null);
+    const preferredTime = data.timeDistribution.length > 0
+      ? data.timeDistribution.reduce((max, item) =>
+          item.count > max.count ? item : max)
+      : null;
     
     if (preferredTime) {
       generatedInsights.push({

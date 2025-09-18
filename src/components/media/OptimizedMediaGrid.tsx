@@ -5,7 +5,7 @@ import { VirtualList } from '@/components/common/VirtualList';
 import { MediaFile } from '@/types/media';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+// import { Checkbox } from '@/components/ui/checkbox';
 import { Trash2, Download, Eye } from 'lucide-react';
 import Image from 'next/image';
 
@@ -45,9 +45,10 @@ const MediaItem = memo<{
     <Card className="group relative overflow-hidden hover:shadow-lg transition-all duration-200">
       {selectable && (
         <div className="absolute top-2 left-2 z-10">
-          <Checkbox
+          <input
+            type="checkbox"
             checked={selected}
-            onCheckedChange={handleSelectionChange}
+            onChange={(e) => handleSelectionChange(e.target.checked)}
             className="bg-white/80 backdrop-blur-sm"
           />
         </div>
