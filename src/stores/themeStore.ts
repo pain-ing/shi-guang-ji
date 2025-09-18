@@ -316,16 +316,46 @@ export const useThemeStore = create<ThemeState>()(
   )
 );
 
-// 自动检查主题切换的定时器
-if (typeof window !== 'undefined') {
-  // 每分钟检查一次自动切换
-  setInterval(() => {
-    const store = useThemeStore.getState();
-    if (store.autoSwitchEnabled) {
-      store.checkAutoSwitch();
+// 自动检查主题切换的定时器管理
+class ThemeTimerManager {
+  private intervalId: NodeJS.Timeout | null = null;
+
+  start() {
+    if (typeof window === 'undefined' || this.intervalId) return;
+
+    this.intervalId = setInterval(() => {
+      const store = useThemeStore.getState();
+      if (store.autoSwitchEnabled) {
+        store.checkAutoSwitch();
+      }
+    }, 60 * 1000);
+  }
+
+  stop() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
-  }, 60 * 1000);
-  
+  }
+
+  restart() {
+    this.stop();
+    this.start();
+  }
+}
+
+// 全局定时器管理实例
+export const themeTimerManager = new ThemeTimerManager();
+
+// 初始化定时器
+if (typeof window !== 'undefined') {
+  themeTimerManager.start();
+
+  // 页面卸载时清理定时器
+  window.addEventListener('beforeunload', () => {
+    themeTimerManager.stop();
+  });
+
   // 暂时禁用系统主题自动跟随，让用户完全控制主题
   // 如果需要可以在主题设置中添加一个开关来启用此功能
 }

@@ -5,7 +5,8 @@ import { SimpleAuthProvider } from "@/components/auth/SimpleAuthProvider"
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
-import { DecorationsProvider } from "@/components/decorations/DecorationsProvider";
+import { OptimizedDecorationsProvider } from "@/components/decorations/OptimizedDecorationsProvider";
+import { PerformanceProvider } from "@/components/performance/PerformanceProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -83,16 +84,18 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body className={`${inter.variable} font-sans antialiased`}>
         <ErrorBoundary>
-          <ThemeProvider>
-            <SimpleAuthProvider>
-              <div className="app-gradient-bg min-h-screen relative">
-                {/* 氛围装饰效果（统一管理，可在主题设置中开关与调节） */}
-                <DecorationsProvider />
-                {children}
-              </div>
-            </SimpleAuthProvider>
-            <Toaster />
-          </ThemeProvider>
+          <PerformanceProvider>
+            <ThemeProvider>
+              <SimpleAuthProvider>
+                <div className="app-gradient-bg min-h-screen relative">
+                  {/* 氛围装饰效果（统一管理，可在主题设置中开关与调节） */}
+                  <OptimizedDecorationsProvider />
+                  {children}
+                </div>
+              </SimpleAuthProvider>
+              <Toaster />
+            </ThemeProvider>
+          </PerformanceProvider>
         </ErrorBoundary>
       </body>
     </html>

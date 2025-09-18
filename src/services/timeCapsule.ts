@@ -252,6 +252,9 @@ export class TimeCapsuleService {
 
   // 定期检查
   private startPeriodicCheck() {
+    // 清理现有定时器
+    this.stopPeriodicCheck();
+
     // 每小时检查一次
     this.checkInterval = setInterval(() => {
       this.checkAndSendReminders();
@@ -261,6 +264,19 @@ export class TimeCapsuleService {
     // 立即执行一次
     this.checkAndSendReminders();
     this.checkOpenableCapsules();
+  }
+
+  // 停止定期检查
+  private stopPeriodicCheck() {
+    if (this.checkInterval) {
+      clearInterval(this.checkInterval);
+      this.checkInterval = null;
+    }
+  }
+
+  // 清理资源
+  public cleanup() {
+    this.stopPeriodicCheck();
   }
 
   // 检查可打开的胶囊

@@ -1,11 +1,16 @@
-import { Metadata } from 'next'
+import { Metadata, Viewport } from 'next'
 import { DataManager } from '@/components/data/DataManager'
 
 export const metadata: Metadata = {
   title: '数据管理 | 拾光集',
   description: '导出、导入和备份你的拾光集数据',
+}
+
+export const viewport: Viewport = {
   themeColor: '#14b8a6',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default function DataPage() {

@@ -71,6 +71,7 @@ class MonitoringService {
   private flushInterval: NodeJS.Timeout | null = null;
   private observers: Map<string, PerformanceObserver> = new Map();
   private reportCallbacks: Set<(data: any) => void> = new Set();
+  private eventListeners: Map<string, EventListener> = new Map();
 
   constructor() {
     this.initializeSession();
@@ -182,13 +183,18 @@ class MonitoringService {
    */
   private setupVisibilityTracking() {
     if (typeof document !== 'undefined') {
-      document.addEventListener('visibilitychange', () => {
+      const handleVisibilityChange = () => {
         if (document.hidden) {
           this.trackAction('page.hidden');
         } else {
           this.trackAction('page.visible');
         }
-      });
+      };
+
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+
+      // 存储事件监听器引用以便清理
+      this.eventListeners.set('visibilitychange', handleVisibilityChange);
     }
   }
 
@@ -196,9 +202,22 @@ class MonitoringService {
    * 开始定时刷新
    */
   private startFlushInterval() {
+    // 清理现有定时器
+    this.stopFlushInterval();
+
     this.flushInterval = setInterval(() => {
       this.flush();
     }, 30000); // 每30秒刷新一次
+  }
+
+  /**
+   * 停止定时刷新
+   */
+  private stopFlushInterval() {
+    if (this.flushInterval) {
+      clearInterval(this.flushInterval);
+      this.flushInterval = null;
+    }
   }
 
   /**
@@ -546,14 +565,19 @@ class MonitoringService {
    */
   destroy() {
     // 停止定时器
-    if (this.flushInterval) {
-      clearInterval(this.flushInterval);
-      this.flushInterval = null;
-    }
+    this.stopFlushInterval();
 
     // 断开观察器
     this.observers.forEach(observer => observer.disconnect());
     this.observers.clear();
+
+    // 清理事件监听器
+    this.eventListeners.forEach((listener, event) => {
+      if (typeof document !== 'undefined') {
+        document.removeEventListener(event, listener);
+      }
+    });
+    this.eventListeners.clear();
 
     // 最后一次刷新
     this.flush();
