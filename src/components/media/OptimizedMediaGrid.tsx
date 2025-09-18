@@ -5,7 +5,7 @@ import { VirtualList } from '@/components/common/VirtualList';
 import { MediaFile } from '@/types/media';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-// import { Checkbox } from '@/components/ui/checkbox';
+// // import { Checkbox } from '@/components/ui/checkbox';
 import { Trash2, Download, Eye } from 'lucide-react';
 import Image from 'next/image';
 

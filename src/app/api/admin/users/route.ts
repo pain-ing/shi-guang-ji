@@ -41,7 +41,8 @@ export async function GET(req: Request) {
     if (error) return NextResponse.json({ error: 'list_failed' }, { status: 400 })
 
     const users = (data?.users || []).map(u => ({ id: u.id, email: u.email, role: (u.app_metadata as { role?: string })?.role || 'user' }))
-    return NextResponse.json({ users, page, perPage, total: data?.total || users.length }, { status: 200 })
+    const total = (data as any)?.total || users.length
+    return NextResponse.json({ users, page, perPage, total }, { status: 200 })
   } catch {
     return NextResponse.json({ error: 'server_error' }, { status: 500 })
   }
