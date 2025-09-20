@@ -1,0 +1,69 @@
+﻿
+> shi-guang-ji@1.0.0 build
+> next build
+
+  鈻?Next.js 14.2.32
+  - Environments: .env.local
+  - Experiments (use with caution):
+    路 webpackBuildWorker
+
+   Creating an optimized production build ...
+> [PWA] Compile server
+> [PWA] Compile server
+> [PWA] Compile client (static)
+> [PWA] Auto register service worker with: D:\Mituanapp1\shi-guang-ji\node_modules\next-pwa\register.js
+> [PWA] Service worker: D:\Mituanapp1\shi-guang-ji\public\sw.js
+> [PWA]   url: /sw.js
+> [PWA]   scope: /
+> [PWA] Compile server
+> [PWA] Compile server
+> [PWA] Compile client (static)
+> [PWA] Auto register service worker with: D:\Mituanapp1\shi-guang-ji\node_modules\next-pwa\register.js
+> [PWA] Service worker: D:\Mituanapp1\shi-guang-ji\public\sw.js
+> [PWA]   url: /sw.js
+> [PWA]   scope: /
+> [PWA] Compile server
+> [PWA] Compile server
+> [PWA] Compile client (static)
+> [PWA] Auto register service worker with: D:\Mituanapp1\shi-guang-ji\node_modules\next-pwa\register.js
+> [PWA] Service worker: D:\Mituanapp1\shi-guang-ji\public\sw.js
+> [PWA]   url: /sw.js
+> [PWA]   scope: /
+ 鉁?Compiled successfully
+   Skipping linting
+   Checking validity of types ...
+node.exe : Failed to compile.
+所在位置 行:1 字符: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Failed to compile.:String) [], Re 
+   moteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+./dist/鎷惧厜闆?win32-x64/resources/app/src/app/features/page.tsx:51:36
+Type error: Argument of type '() => Promise<typeof import("D:/Mituanapp1/shi-gu
+ang-ji/src/components/share/ShareCardGenerator")>' is not assignable to paramet
+er of type 'DynamicOptions<{}> | Loader<{}>'.
+  Type '() => Promise<typeof import("D:/Mituanapp1/shi-guang-ji/src/components/
+share/ShareCardGenerator")>' is not assignable to type '() => LoaderComponent<{
+}>'.
+    Type 'Promise<typeof import("D:/Mituanapp1/shi-guang-ji/src/components/shar
+e/ShareCardGenerator")>' is not assignable to type 'LoaderComponent<{}>'.
+      Type 'typeof import("D:/Mituanapp1/shi-guang-ji/src/components/share/Shar
+eCardGenerator")' is not assignable to type 'ComponentType<{}> | ComponentModul
+e<{}>'.
+
+[0m [90m 49 |[39m })[33m;[39m[0m
+[0m [90m 50 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 51 |[39m [36mconst[39m [33mShareCardGenerator
+[39m [33m=[39m dynamic(() [33m=>[39m [36mimport[39m([32m'@/components/s
+hare/ShareCardGenerator'[39m)[33m,[39m {[0m
+[0m [90m    |[39m                                    [31m[1m^[22m[39m[0
+m
+[0m [90m 52 |[39m   loading[33m:[39m () [33m=>[39m [33m<[39m[33mdiv[
+39m[33m>[39m鍔犺浇鍒嗕韩鍗＄墖鐢熸垚鍣?[33m...[39m[33m<[39m[33m/[39m[33mdiv[39m[33
+m>[39m[0m
+[0m [90m 53 |[39m })[33m;[39m[0m
+[0m [90m 54 |[39m[0m
+Next.js build worker exited with code: 1 and signal: null
